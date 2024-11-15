@@ -54,6 +54,7 @@
     "dotnet.defaultSolution": "Radar.sln",
     "cSpell.words": [
         "Behaviour",
+        "Inferencer",
         "Readback",
         "Sentis"
     ]

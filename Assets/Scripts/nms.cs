@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace radar.utils
 {
-    class BoundingBox
+    public class BoundingBox
     {
         public float XMin { get; set; }
         public float YMin { get; set; }
