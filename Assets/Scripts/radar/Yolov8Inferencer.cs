@@ -2,20 +2,18 @@ using UnityEngine;
 using Unity.Sentis;
 using System.Collections.Generic;
 using radar.utils;
+using System;
 
 namespace radar.Yolov8
 {
-    public class Yolov8Inferencer
+    public class Yolov8Inferencer : IDisposable
     {
-        float duration = 0f;
         Worker worker;
-        float windowHeight = Screen.height;
-        float windowWidth = Screen.width;
         public Yolov8Inferencer(ModelAsset inferenceModel)
         {
             worker = new Worker(ModelLoader.Load(inferenceModel), BackendType.GPUCompute);
         }
-        public List<List<BoundingBox>> inference(Texture2D inputTexture, float confidenceThreshold, float nmsThreshold, bool ifDrawBoxes)
+        public List<List<BoundingBox>> inference(Texture2D inputTexture, float confidenceThreshold, float nmsThreshold)
         {
             using Tensor<float> inputTensor = TextureConverter.ToTensor(inputTexture, width: 640, height: 640);
             worker.Schedule(inputTensor);
@@ -23,7 +21,6 @@ namespace radar.Yolov8
             using Tensor<float> cpuTensor = outputTensor.ReadbackAndClone() as Tensor<float>;
 
             List<List<BoundingBox>> results = postProcess(cpuTensor, cpuTensor.shape[1] - 4, confidenceThreshold, nmsThreshold);
-            if (ifDrawBoxes) drawBoxes(results);
 
             return results;
         }
@@ -62,31 +59,14 @@ namespace radar.Yolov8
             }
             return finalResults;
         }
-
-        void drawBoxes(List<List<BoundingBox>> boundingBoxes)
+        ~Yolov8Inferencer()
         {
-            for (int i = 0; i < boundingBoxes.Count; i++)
-            {
-                for (int j = 0; j < boundingBoxes[i].Count; j++)
-                {
-                    float a = boundingBoxes[i][j].Confidence;
-                    Color color = new Color(1 - a, a, 0, 0.8F);
-                    Vector3 leftUp = new Vector3(boundingBoxes[i][j].XMin * (windowWidth / 640f), boundingBoxes[i][j].YMax * (windowHeight / 640f), -10);
-                    Vector3 rightDown = new Vector3(boundingBoxes[i][j].XMax * (windowWidth / 640f), boundingBoxes[i][j].YMin * (windowHeight / 640f), -10);
-                    Vector3 leftDown = new Vector3(boundingBoxes[i][j].XMin * (windowWidth / 640f), boundingBoxes[i][j].YMin * (windowHeight / 640f), -10);
-                    Vector3 rightUp = new Vector3(boundingBoxes[i][j].XMax * (windowWidth / 640f), boundingBoxes[i][j].YMax * (windowHeight / 640f), -10);
-
-                    Debug.DrawLine(leftUp, rightUp, color, duration);
-                    Debug.DrawLine(rightUp, rightDown, color, duration);
-                    Debug.DrawLine(rightDown, leftDown, color, duration);
-                    Debug.DrawLine(leftDown, leftUp, color, duration);
-                }
-            }
+            Dispose();
         }
-
-        void OnDisable()
+        public void Dispose()
         {
             worker.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }

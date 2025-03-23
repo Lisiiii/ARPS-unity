@@ -6,7 +6,7 @@ RenderTexture:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: "\u65B0\u5EFA\u6E32\u67D3\u5668\u7EB9\u7406"
+  m_Name: MinimapCameraTexture
   m_ImageContentsHash:
     serializedVersion: 2
     Hash: 00000000000000000000000000000000
