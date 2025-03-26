@@ -7,27 +7,27 @@ using UnityEngine;
 
 namespace radar.serial
 {
-    public class Serial : MonoBehaviour
+    public class SerialHandler : MonoBehaviour
     {
         string[] ports;
         SerialPort current_sp;
         public byte[] receivedData = new byte[1024];
         void Start()
         {
-            Debug.Log("--- Serial Init ---");
-            ports = ScanPorts();
-            Debug.Log("Scaned ports count: " + ports.Length);
-            foreach (string port in ports)
-            {
-                if (port.Contains("COM1"))
-                {
-                    if (ConnectToPort(ref current_sp, port, 9600, Parity.None, 8, StopBits.One))
-                    {
-                        Debug.Log("Connect to " + port);
-                        StartCoroutine(SendDataToSerialPort());
-                    }
-                }
-            }
+            // Debug.Log("--- Serial Init ---");
+            // ports = ScanPorts();
+            // Debug.Log("Scaned ports count: " + ports.Length);
+            // foreach (string port in ports)
+            // {
+            //     if (port.Contains("COM1"))
+            //     {
+            //         if (ConnectToPort(ref current_sp, port, 9600, Parity.None, 8, StopBits.One))
+            //         {
+            //             Debug.Log("Connect to " + port);
+            //             StartCoroutine(SendDataToSerialPort());
+            //         }
+            //     }
+            // }
         }
         void Update()
         {
@@ -49,8 +49,26 @@ namespace radar.serial
             string[] portList = SerialPort.GetPortNames();
             return portList;
         }
-
-        public bool ConnectToPort(ref SerialPort sp, string portName, int baudRate, Parity parity, int dataBits, StopBits stopBits)
+        public bool Connect(string portName, int baudRate, Parity parity, int dataBits, StopBits stopBits)
+        {
+            return ConnectToPort(ref current_sp, portName, baudRate, parity, dataBits, stopBits);
+        }
+        public bool ClosePort()
+        {
+            try
+            {
+                if (current_sp.IsOpen)
+                    current_sp.Close();
+                StopAllCoroutines();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.Log(ex);
+                return false;
+            }
+        }
+        private bool ConnectToPort(ref SerialPort sp, string portName, int baudRate, Parity parity, int dataBits, StopBits stopBits)
         {
             try
             {
@@ -58,6 +76,9 @@ namespace radar.serial
                 sp.Open();
                 Thread thread = new Thread(new ThreadStart(DataReceivedHandler));
                 thread.Start();
+                //
+                StartCoroutine(SendDataToSerialPort());
+                //
                 return true;
             }
             catch (Exception ex)
@@ -136,7 +157,6 @@ namespace radar.serial
                 Debug.Log(ex);
             }
         }
-
 
     }
 
