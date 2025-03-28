@@ -46,11 +46,11 @@ public class RayCaster : MonoBehaviour
                 robot.transform.position = hit.point;
                 GameObject.Destroy(robot, 0.1f);
 
-                // Debug.DrawLine(rayCastCamera.transform.position, hit.point, Color.green);
-                // Vector3 hitPointUp;
-                // hitPointUp = hit.point;
-                // hitPointUp.y += 1.0f;
-                // Debug.DrawLine(hitPointUp, hit.point, Color.red);
+                Debug.DrawLine(rayCastCamera.transform.position, hit.point, Color.green);
+                Vector3 hitPointUp;
+                hitPointUp = hit.point;
+                hitPointUp.y += 1.0f;
+                Debug.DrawLine(hitPointUp, hit.point, Color.red);
             }
         }
 
