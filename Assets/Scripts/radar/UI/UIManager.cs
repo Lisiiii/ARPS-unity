@@ -25,8 +25,7 @@ namespace radar.ui
                 panel.Value.Initialize();
                 panel.Value.Hide();
             }
-            // ShowPanel<MainUI>();
-            ShowPanel<IOHandleUI>();
+            ShowPanel<MainUI>();
         }
 
         public void Update()

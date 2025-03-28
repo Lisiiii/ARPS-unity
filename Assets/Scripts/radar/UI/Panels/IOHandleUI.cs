@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using System.IO.Ports;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 namespace radar.ui.panel
 {
@@ -17,7 +18,7 @@ namespace radar.ui.panel
             public Button ScanButton;
             public Button CloseButton;
             public Transform COMViewListRoot;
-            public Text Info;
+            public TextMeshProUGUI Info;
             public string[] ports;
             public Transform COMSubmenuPrefab;
         }
@@ -36,7 +37,7 @@ namespace radar.ui.panel
                 ScanButton = IOHandlePanelCanvasRoot.transform.Find("COMView/ScanButton").GetComponent<Button>(),
                 CloseButton = IOHandlePanelCanvasRoot.transform.Find("COMView/CloseButton").GetComponent<Button>(),
                 COMViewListRoot = IOHandlePanelCanvasRoot.transform.Find("COMView/List"),
-                Info = IOHandlePanelCanvasRoot.transform.Find("COMView/Info").GetComponent<Text>(),
+                Info = IOHandlePanelCanvasRoot.transform.Find("COMView/Info").GetComponent<TextMeshProUGUI>(),
                 ports = new string[0],
                 COMSubmenuPrefab = Resources.Load<Transform>("Prefab/COMSubmenu")
             };
@@ -45,7 +46,6 @@ namespace radar.ui.panel
             SwitchToMainButton.onClick.AddListener(() =>
             {
                 UIManager.HidePanel<IOHandleUI>();
-                UIManager.ShowPanel<MainUI>();
             });
 
             CameraViewListRoot = IOHandlePanelCanvasRoot.transform.Find("CameraView/List");
@@ -80,13 +80,13 @@ namespace radar.ui.panel
             Transform COMSubmenu = Instantiate(COMView.COMSubmenuPrefab, COMView.COMViewListRoot);
             if (portName == null)
             {
-                COMSubmenu.Find("Button/Text").GetComponent<Text>().text = "无端口";
+                COMSubmenu.Find("Button/Text").GetComponent<TextMeshProUGUI>().text = "无端口";
                 COMSubmenu.Find("Button").GetComponent<Button>().interactable = false;
             }
             else
             {
                 COMSubmenu.name = portName;
-                COMSubmenu.Find("Button/Text").GetComponent<Text>().text = portName;
+                COMSubmenu.Find("Button/Text").GetComponent<TextMeshProUGUI>().text = portName;
                 COMSubmenu.Find("Button").GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f);
                 COMSubmenu.Find("Button").GetComponent<Button>().onClick.AddListener(() =>
                 {

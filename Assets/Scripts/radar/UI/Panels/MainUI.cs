@@ -1,3 +1,4 @@
+using radar.Yolov8;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -53,6 +54,16 @@ namespace radar.ui.panel
     };
     #endregion
 
+    #region RAW_CAMERA_VIEW
+    struct RawCameraViewType
+    {
+        public Transform RawCameraViewRoot;
+        public RawImage RaycastCameraView;
+        public TextMeshProUGUI CameraInfo;
+        public Button SwitchInferenceButton;
+        public GameObject InferenceIndicator;
+    };
+    #endregion
 
 
 
@@ -61,13 +72,16 @@ namespace radar.ui.panel
         Canvas MainPanelCanvasRoot;
         InfoBarViewType InfoBarView;
         SwitchButtonViewType SwitchButtonView;
+        RawCameraViewType RawCameraView;
         public override void Initialize()
         {
             MainPanelCanvasRoot = GetComponent<Canvas>();
+
             InitializeInfoBarView();
             InitializeSwitchButtonView();
-            initialTime = System.DateTime.Now.AddMinutes(7);
+            InitializeRawCameraView();
 
+            initialTime = System.DateTime.Now.AddMinutes(7);
         }
         public override void Update()
         {
@@ -119,6 +133,7 @@ namespace radar.ui.panel
                 CallibrationButton = MainPanelCanvasRoot.transform.Find("SwitchButtonView/CallibrationButton").GetComponent<Button>(),
                 IOButton = MainPanelCanvasRoot.transform.Find("SwitchButtonView/IOButton").GetComponent<Button>()
             };
+            // TODO: CallibrationUI
             // SwitchButtonView.CallibrationButton.onClick.AddListener(() =>
             // {
             //     UIManager.HidePanel<MainUI>();
@@ -126,8 +141,34 @@ namespace radar.ui.panel
             // });
             SwitchButtonView.IOButton.onClick.AddListener(() =>
             {
-                UIManager.HidePanel<MainUI>();
                 UIManager.ShowPanel<IOHandleUI>();
+            });
+        }
+        private void InitializeRawCameraView()
+        {
+            RawCameraView = new RawCameraViewType
+            {
+                RawCameraViewRoot = MainPanelCanvasRoot.transform.Find("RawCameraView"),
+                RaycastCameraView = MainPanelCanvasRoot.transform.Find("RawCameraView/Background/RaycastCameraView").GetComponent<RawImage>(),
+                CameraInfo = MainPanelCanvasRoot.transform.Find("RawCameraView/Background/Info").GetComponent<TextMeshProUGUI>(),
+                SwitchInferenceButton = MainPanelCanvasRoot.transform.Find("RawCameraView/Background/SwitchInferenceButton").GetComponent<Button>(),
+                InferenceIndicator = MainPanelCanvasRoot.transform.Find("RawCameraView/Background/InferenceIndicator").gameObject
+            };
+            RawCameraView.SwitchInferenceButton.onClick.AddListener(() =>
+            {
+                RayCaster YoloInferencer = GameObject.Find("Yolov8Inferencer").GetComponent<RayCaster>();
+                YoloInferencer.ifInference_ = !YoloInferencer.ifInference_;
+
+                if (YoloInferencer.ifInference_)
+                {
+                    RawCameraView.InferenceIndicator.GetComponent<Image>().color = Color.green;
+                    RawCameraView.InferenceIndicator.transform.Find("Text").GetComponent<TextMeshProUGUI>().text = "识别运行中";
+                }
+                else
+                {
+                    RawCameraView.InferenceIndicator.GetComponent<Image>().color = Color.yellow;
+                    RawCameraView.InferenceIndicator.transform.Find("Text").GetComponent<TextMeshProUGUI>().text = "识别已关闭";
+                }
             });
         }
         private void UpdateGameTime()

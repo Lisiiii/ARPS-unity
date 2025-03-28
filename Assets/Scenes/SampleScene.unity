@@ -1388,15 +1388,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1245029166}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0.1039399, w: 0.9945836}
+  m_LocalPosition: {x: -0.87021065, y: -3.1069317, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 132185395}
   - {fileID: 2113617284}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -11.932}
 --- !u!114 &1245029169
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1409,11 +1409,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca28d0ebb7af4d24ba2dc995510c7e8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  modelAsset: {fileID: 5022602860645237092, guid: 139ff6dc382c3714fa832f26cfa1d876,
+  modelAsset_: {fileID: 5022602860645237092, guid: 436a972dc5c7f504094ea7d63f20ae49,
     type: 3}
-  inputTexture: {fileID: 8400000, guid: a0dc44089f585934095ec0af03e1f818, type: 2}
-  rayCastCamera: {fileID: 132185394}
-  Robot: {fileID: 3863701348987770854, guid: 304cb4ca7fbcf554ea516bc2c3a08e70, type: 3}
+  inputTexture_: {fileID: 8400000, guid: a0dc44089f585934095ec0af03e1f818, type: 2}
+  rayCastCamera_: {fileID: 132185394}
+  robotPrefab_: {fileID: 3863701348987770854, guid: 304cb4ca7fbcf554ea516bc2c3a08e70,
+    type: 3}
+  ifInference_: 0
 --- !u!1 &1255559050
 GameObject:
   m_ObjectHideFlags: 0
