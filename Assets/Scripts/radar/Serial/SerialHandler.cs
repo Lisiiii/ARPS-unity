@@ -12,6 +12,7 @@ namespace radar.serial
         string[] ports;
         SerialPort current_sp;
         public byte[] receivedData = new byte[1024];
+        public DataManager dataManager_;
         void Start()
         {
             // Debug.Log("--- Serial Init ---");
@@ -76,9 +77,9 @@ namespace radar.serial
                 sp.Open();
                 Thread thread = new Thread(new ThreadStart(DataReceivedHandler));
                 thread.Start();
-                //
+                // DEBUG
                 StartCoroutine(SendDataToSerialPort());
-                //
+                // DEBUG
                 return true;
             }
             catch (Exception ex)
@@ -108,6 +109,7 @@ namespace radar.serial
                             // }
                             // Debug.Log(sb.ToString());
                             receivedData = readBuffer;
+                            dataManager_.UpdateStateDatas(receivedData);
                         }
                         catch (Exception ex)
                         {

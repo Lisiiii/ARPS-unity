@@ -133,12 +133,11 @@ namespace radar.ui.panel
                 CallibrationButton = MainPanelCanvasRoot.transform.Find("SwitchButtonView/CallibrationButton").GetComponent<Button>(),
                 IOButton = MainPanelCanvasRoot.transform.Find("SwitchButtonView/IOButton").GetComponent<Button>()
             };
-            // TODO: CallibrationUI
-            // SwitchButtonView.CallibrationButton.onClick.AddListener(() =>
-            // {
-            //     UIManager.HidePanel<MainUI>();
-            //     UIManager.ShowPanel<CallibrationUI>();
-            // });
+            SwitchButtonView.CallibrationButton.onClick.AddListener(() =>
+            {
+                UIManager.ShowPanel<CalibrationUI>();
+                UIManager.GetPanel<CalibrationUI>().setCameraViewEnabled(true);
+            });
             SwitchButtonView.IOButton.onClick.AddListener(() =>
             {
                 UIManager.ShowPanel<IOHandleUI>();
