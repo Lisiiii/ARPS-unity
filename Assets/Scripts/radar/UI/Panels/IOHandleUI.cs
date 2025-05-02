@@ -24,13 +24,36 @@ namespace radar.ui.panel
         }
         COMViewType COMView;
 
+        struct WebCameraViewType
+        {
+            public Transform WebCameraViewRoot;
+            public Button ScanButton;
+            public Button CloseButton;
+            public Transform WebCameraViewListRoot;
+            public TextMeshProUGUI Info;
+            public string[] cameras;
+            public Transform WebCameraSubmenuPrefab;
+        }
+        WebCameraViewType WebCameraView;
+
         Button SwitchToMainButton;
         serial.SerialHandler SerialHandler;
-        Transform CameraViewListRoot;
+        webcamera.WebCameraHandler WebCameraHandler;
         public override void Initialize()
         {
             IOHandlePanelCanvasRoot = GetComponent<Canvas>();
 
+            InitialCOMView();
+            InitialWebCameraView();
+
+            SwitchToMainButton = IOHandlePanelCanvasRoot.transform.Find("SwitchToMainButton").GetComponent<Button>();
+            SwitchToMainButton.onClick.AddListener(() =>
+            {
+                UIManager.HidePanel<IOHandleUI>();
+            });
+        }
+        private void InitialCOMView()
+        {
             COMView = new COMViewType
             {
                 COMViewRoot = IOHandlePanelCanvasRoot.transform.Find("COMView"),
@@ -41,17 +64,7 @@ namespace radar.ui.panel
                 ports = new string[0],
                 COMSubmenuPrefab = Resources.Load<Transform>("Prefab/COMSubmenu")
             };
-
-            SwitchToMainButton = IOHandlePanelCanvasRoot.transform.Find("SwitchToMainButton").GetComponent<Button>();
-            SwitchToMainButton.onClick.AddListener(() =>
-            {
-                UIManager.HidePanel<IOHandleUI>();
-            });
-
-            CameraViewListRoot = IOHandlePanelCanvasRoot.transform.Find("CameraView/List");
             SerialHandler = GameObject.Find("SerialHandler").transform.GetComponent<serial.SerialHandler>();
-
-            AddCOMSubmenu();
 
             COMView.ScanButton.onClick.AddListener(() =>
             {
@@ -71,9 +84,45 @@ namespace radar.ui.panel
                 else
                     COMView.Info.text = "关闭端口失败";
             });
+
+            AddCOMSubmenu();
         }
-        public override void Update()
+        private void InitialWebCameraView()
         {
+
+            WebCameraView = new WebCameraViewType
+            {
+                WebCameraViewRoot = IOHandlePanelCanvasRoot.transform.Find("WebCameraView"),
+                ScanButton = IOHandlePanelCanvasRoot.transform.Find("WebCameraView/ScanButton").GetComponent<Button>(),
+                CloseButton = IOHandlePanelCanvasRoot.transform.Find("WebCameraView/CloseButton").GetComponent<Button>(),
+                WebCameraViewListRoot = IOHandlePanelCanvasRoot.transform.Find("WebCameraView/List"),
+                Info = IOHandlePanelCanvasRoot.transform.Find("WebCameraView/Info").GetComponent<TextMeshProUGUI>(),
+                cameras = new string[0],
+                WebCameraSubmenuPrefab = Resources.Load<Transform>("Prefab/WebCameraSubmenu")
+            };
+            WebCameraHandler = GameObject.Find("WebCameraHandler").transform.GetComponent<webcamera.WebCameraHandler>();
+
+            WebCameraHandler.OnCameraScanned += OnCameraScaned;
+            WebCameraView.ScanButton.onClick.AddListener(() =>
+            {
+                WebCameraHandler.ScanCamera();
+            });
+            WebCameraView.CloseButton.onClick.AddListener(() =>
+            {
+                WebCameraHandler.CloseCamera();
+            });
+
+            AddWebCameraSubmenu();
+        }
+
+        private void OnCameraScaned(WebCamDevice[] devices)
+        {
+            foreach (Transform child in WebCameraView.WebCameraViewListRoot)
+                Destroy(child.gameObject);
+            foreach (WebCamDevice device in devices)
+            {
+                AddWebCameraSubmenu(device.name);
+            }
         }
         private void AddCOMSubmenu(string portName = null)
         {
@@ -100,6 +149,36 @@ namespace radar.ui.panel
                         COMView.Info.text = "连接失败";
                 });
             }
+        }
+
+        private void AddWebCameraSubmenu(string cameraName = null)
+        {
+            Transform WebCameraSubmenu = Instantiate(WebCameraView.WebCameraSubmenuPrefab, WebCameraView.WebCameraViewListRoot);
+            if (cameraName == null)
+            {
+                WebCameraSubmenu.Find("Button/Text").GetComponent<TextMeshProUGUI>().text = "无摄像头";
+                WebCameraSubmenu.Find("Button").GetComponent<Button>().interactable = false;
+            }
+            else
+            {
+                WebCameraSubmenu.name = cameraName;
+                WebCameraSubmenu.Find("Button/Text").GetComponent<TextMeshProUGUI>().text = cameraName;
+                WebCameraSubmenu.Find("Button").GetComponent<Image>().color = new Color(0.5f, 0.5f, 0.5f);
+                WebCameraSubmenu.Find("Button").GetComponent<Button>().onClick.AddListener(() =>
+                {
+                    try
+                    {
+                        WebCameraHandler.OpenCamera(cameraName);
+                    }
+                    catch (System.Exception e)
+                    {
+                        WebCameraView.Info.text = "连接失败" + e.ToString();
+                        return;
+                    }
+                    WebCameraView.Info.text = "已连接到 " + cameraName;
+                });
+            }
+
         }
     }
 }

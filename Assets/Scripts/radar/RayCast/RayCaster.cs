@@ -9,7 +9,7 @@ using radar.data;
 public class RayCaster : MonoBehaviour
 {
     public ModelAsset modelAsset_;
-    public int classCount_ = 80;
+    public int classCount_;
     public RenderTexture inputTexture_;
     public Camera rayCastCamera_;
     public GameObject robotPrefab_;
@@ -37,7 +37,7 @@ public class RayCaster : MonoBehaviour
 
         if (ifInference_)
         {
-            Dictionary<int, List<BoundingBox>> results = yolov8Inferencer_.inference(texture_, 0.1f, 0.3f);
+            Dictionary<int, List<BoundingBox>> results = yolov8Inferencer_.inference(texture_, 0.05f, 0.2f);
             if (results != null)
                 inferenceResults_ = results;
             RayCast(inferenceResults_);

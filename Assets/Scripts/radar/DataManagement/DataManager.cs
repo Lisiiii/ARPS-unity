@@ -31,7 +31,6 @@ public class DataManager : MonoBehaviour
     public bool isDataUpdated_ = false;
     public void Start()
     {
-        OnDataUpdated += DEBUG_logOnDataUpdated;
     }
 
     public void Update()
@@ -53,15 +52,6 @@ public class DataManager : MonoBehaviour
         {
             OnDataUpdated?.Invoke(stateData_);
             isDataUpdated_ = false;
-        }
-    }
-
-    void DEBUG_logOnDataUpdated(StateDatas stateData)
-    {
-        Debug.Log("Data Updated: " + stateData.gameState_.GameStage.ToString() + " " + stateData.gameState_.GameTimeSeconds.ToString() + " " + stateData.gameState_.GameCount.ToString() + " " + stateData.gameState_.EnemySide.ToString());
-        foreach (var robot in stateData.enemyRobotStates_)
-        {
-            Debug.Log(robot.Key.ToString() + ": " + robot.Value.Position.ToString() + " " + robot.Value.IsTracked.ToString() + " " + robot.Value.LastUpdateTime.ToString() + " " + robot.Value.HP.ToString());
         }
     }
 }

@@ -43,7 +43,7 @@ namespace radar.data
                 { RobotType.Base, new RobotState() { IsTracked = false, Position = Vector2.zero, LastUpdateTime = DateTime.Now, HP = 2000}},
             };
             allieRobotStates_ = enemyRobotStates_;
-            gameState_ = new GameState { GameStage = GameStage.NotStarted, GameTimeSeconds = 0, GameCount = 0, EnemySide = Team.Blue };
+            gameState_ = new GameState { GameStage = GameStage.NotStarted, GameTimeSeconds = 0, GameCount = 0, EnemySide = Team.Red };
         }
     }
 }

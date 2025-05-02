@@ -13,7 +13,7 @@ namespace radar.Yolov8
         Worker worker_;
         private bool inferencePending_ = false;
         private Tensor<float> outputTensor_;
-        public int classCount_ = 80; // Number of classes in model
+        public int classCount_; // Number of classes in model
         public Yolov8Inferencer(ModelAsset inferenceModel)
         {
             worker_ = new Worker(ModelLoader.Load(inferenceModel), BackendType.GPUCompute);
@@ -50,7 +50,6 @@ namespace radar.Yolov8
         Dictionary<int, List<BoundingBox>> postProcess(float[] cpuTensorArray, int classCount, float confidenceThreshold, float nmsThreshold)
         {
             // cpuTensor[i,j,k] (which is [1, classCount + 4 ,8400]) = cpuTensorArray[i * (classCount + 4) * 8400 + j * 8400 + k]
-
             Dictionary<int, List<BoundingBox>> finalResults = new Dictionary<int, List<BoundingBox>>();
             Dictionary<int, List<BoundingBox>> classBoundingBoxes = new Dictionary<int, List<BoundingBox>>();
 
@@ -66,10 +65,10 @@ namespace radar.Yolov8
                         // float xMax = cpuTensor[0, 0, i] + cpuTensor[0, 2, i] / 2;
                         // float yMin = 640f - (cpuTensor[0, 1, i] + cpuTensor[0, 3, i] / 2);
                         // float yMax = 640f - (cpuTensor[0, 1, i] - cpuTensor[0, 3, i] / 2);
-                        float xMin = cpuTensorArray[0 * (classCount + 4) * 8400 + 0 * 8400 + i] - cpuTensorArray[0 * (classCount + 4) * 8400 + 2 * 8400 + i] / 2;
-                        float yMax = 640f - (cpuTensorArray[1 * (classCount + 4) * 8400 + 1 * 8400 + i] - cpuTensorArray[1 * (classCount + 4) * 8400 + 3 * 8400 + i] / 2);
-                        float xMax = cpuTensorArray[0 * (classCount + 4) * 8400 + 0 * 8400 + i] + cpuTensorArray[0 * (classCount + 4) * 8400 + 2 * 8400 + i] / 2;
-                        float yMin = 640f - (cpuTensorArray[1 * (classCount + 4) * 8400 + 1 * 8400 + i] + cpuTensorArray[1 * (classCount + 4) * 8400 + 3 * 8400 + i] / 2);
+                        float xMin = cpuTensorArray[0 * 8400 + i] - cpuTensorArray[2 * 8400 + i] / 2;
+                        float yMax = 640f - (cpuTensorArray[1 * 8400 + i] - cpuTensorArray[3 * 8400 + i] / 2);
+                        float xMax = cpuTensorArray[0 * 8400 + i] + cpuTensorArray[2 * 8400 + i] / 2;
+                        float yMin = 640f - (cpuTensorArray[1 * 8400 + i] + cpuTensorArray[3 * 8400 + i] / 2);
 
                         //  the output tensor is 4->classCount+4, so the classIndex should be minus 4
                         if (!classBoundingBoxes.ContainsKey(classIndex - 4))

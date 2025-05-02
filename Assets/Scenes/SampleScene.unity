@@ -376,6 +376,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: RMUC2025
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2e7b7f90ed215184ea72cc59e17bfab0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -466,6 +471,51 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.4614553, y: 5.0667295, z: -33.66}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &323927799
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 323927801}
+  - component: {fileID: 323927800}
+  m_Layer: 0
+  m_Name: WebCameraHandler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &323927800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 323927799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d19e8dd58ec454d478b848a5947bbb4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputTexture_: {fileID: 8400000, guid: 212ceaf1e05fdb74d84f8e88f8d3e319, type: 2}
+--- !u!4 &323927801
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 323927799}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -15.682347, y: 3.1876652, z: 0.86674124}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1129,26 +1179,28 @@ VideoPlayer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 596162256}
   m_Enabled: 1
-  m_VideoClip: {fileID: 32900000, guid: 76b872876dfd74c4aaa0925a2bb70a56, type: 3}
+  m_VideoClip: {fileID: 32900000, guid: 1d6bfa60af101d147af9460912681653, type: 3}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 0}
-  m_TargetTexture: {fileID: 8400000, guid: 212ceaf1e05fdb74d84f8e88f8d3e319, type: 2}
+  m_TargetTexture: {fileID: 8400000, guid: b9496d38c0f5c3d4ca9c9216efa66aa2, type: 2}
   m_TimeReference: 0
   m_TargetMaterialRenderer: {fileID: 0}
   m_TargetMaterialProperty: <noninit>
   m_RenderMode: 2
-  m_AspectRatio: 2
+  m_AspectRatio: 5
   m_DataSource: 0
   m_TimeUpdateMode: 2
   m_PlaybackSpeed: 1
   m_AudioOutputMode: 2
-  m_TargetAudioSources: []
-  m_DirectAudioVolumes: []
+  m_TargetAudioSources:
+  - {fileID: 0}
+  m_DirectAudioVolumes:
+  - 1
   m_Url: 
-  m_EnabledAudioTracks: 
-  m_DirectAudioMutes: 
-  m_ControlledAudioTrackCount: 0
+  m_EnabledAudioTracks: 01
+  m_DirectAudioMutes: 00
+  m_ControlledAudioTrackCount: 1
   m_PlayOnAwake: 1
   m_SkipOnDrop: 1
   m_Looping: 1
@@ -1585,9 +1637,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca28d0ebb7af4d24ba2dc995510c7e8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  modelAsset_: {fileID: 5022602860645237092, guid: 436a972dc5c7f504094ea7d63f20ae49,
+  modelAsset_: {fileID: 5022602860645237092, guid: d30ee694d2d66e14ba242b35915761dd,
     type: 3}
-  classCount_: 80
+  classCount_: 12
   inputTexture_: {fileID: 8400000, guid: 212ceaf1e05fdb74d84f8e88f8d3e319, type: 2}
   rayCastCamera_: {fileID: 132185394}
   robotPrefab_: {fileID: 3863701348987770854, guid: 304cb4ca7fbcf554ea516bc2c3a08e70,
@@ -1797,7 +1849,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ee2e6d9d22868674c9ff648c6d29dc73,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1822,7 +1874,7 @@ GameObject:
   - component: {fileID: 2028028281}
   - component: {fileID: 2028028280}
   m_Layer: 0
-  m_Name: RawImage
+  m_Name: InputImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1895,6 +1947,7 @@ SceneRoots:
   - {fileID: 323380599}
   - {fileID: 802206372}
   - {fileID: 299995908}
+  - {fileID: 323927801}
   - {fileID: 418860887}
   - {fileID: 136661819}
   - {fileID: 330585546}
