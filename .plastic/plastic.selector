@@ -1,0 +1,4 @@
+repository "Radar@tj_lrinaus@cloud.cn"
+  path "/"
+    br "/main"
+    co "/main"

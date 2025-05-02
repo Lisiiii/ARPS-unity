@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 9
+  serializedVersion: 10
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -38,12 +38,12 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 12
-  m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -66,9 +66,6 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
-    m_FinalGather: 0
-    m_FinalGatherFiltering: 1
-    m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
     m_BakeBackend: 1
@@ -301,7 +298,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -9053065819287921067, guid: 2e7b7f90ed215184ea72cc59e17bfab0,
         type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: d00557d1ad202854a9ddcee92d38b921, type: 2}
     - target: {fileID: -8679921383154817045, guid: 2e7b7f90ed215184ea72cc59e17bfab0,
@@ -428,8 +425,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2056a33bc9069f442be041275920ac1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  receivedData: 
-  dataManager_: {fileID: 0}
+  dataManager_: {fileID: 323380598}
 --- !u!1 &323380597
 GameObject:
   m_ObjectHideFlags: 0
@@ -459,6 +455,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e920ec3bbb773143b2729ff5244dd6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDataUpdated_: 0
 --- !u!4 &323380599
 Transform:
   m_ObjectHideFlags: 0
@@ -637,9 +634,8 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 410087039}
   m_Enabled: 1
-  serializedVersion: 10
+  serializedVersion: 11
   m_Type: 1
-  m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 3
   m_Range: 10
@@ -905,6 +901,8 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1294,6 +1292,8 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1587,6 +1587,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   modelAsset_: {fileID: 5022602860645237092, guid: 436a972dc5c7f504094ea7d63f20ae49,
     type: 3}
+  classCount_: 80
   inputTexture_: {fileID: 8400000, guid: 212ceaf1e05fdb74d84f8e88f8d3e319, type: 2}
   rayCastCamera_: {fileID: 132185394}
   robotPrefab_: {fileID: 3863701348987770854, guid: 304cb4ca7fbcf554ea516bc2c3a08e70,
@@ -1695,6 +1696,8 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:

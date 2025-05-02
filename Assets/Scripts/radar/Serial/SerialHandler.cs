@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.IO.Ports;
 using System.Threading;
 using UnityEngine;
+using radar.data;
+using Unity.Android.Gradle.Manifest;
 
 namespace radar.serial
 {
@@ -11,7 +13,7 @@ namespace radar.serial
     {
         string[] ports;
         SerialPort current_sp;
-        public byte[] receivedData = new byte[1024];
+        private byte[] receivedData = new byte[1024];
         public DataManager dataManager_;
         void Start()
         {
@@ -34,7 +36,7 @@ namespace radar.serial
         {
         }
 
-        // send data to serial port every 2 seconds (DEBUG)
+        // send data to serial port every 2 seconds (DEBUG) ---->
         IEnumerator SendDataToSerialPort()
         {
             while (true)
@@ -44,6 +46,7 @@ namespace radar.serial
                 Debug.Log("Send data to " + current_sp.PortName);
             }
         }
+        // send data to serial port every 2 seconds (DEBUG) <----
 
         public string[] ScanPorts()
         {
@@ -109,7 +112,11 @@ namespace radar.serial
                             // }
                             // Debug.Log(sb.ToString());
                             receivedData = readBuffer;
-                            dataManager_.UpdateStateDatas(receivedData);
+                            StateDatas receivedStateDatas = ParseData(receivedData);
+                            if (receivedStateDatas != null)
+                            {
+                                dataManager_.updatedStateQueue_.Enqueue(receivedStateDatas);
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -118,6 +125,22 @@ namespace radar.serial
                     }
                 }
                 Thread.Sleep(10);
+            }
+        }
+
+        private StateDatas ParseData(byte[] readBuffer)
+        {
+            if (receivedData.Length > 0)
+            {
+                // Debug.Log("Received data: " + receivedData.Length);
+                StateDatas stateData = new StateDatas();
+                // TODO : Fill the stateData object with parsed data
+                return stateData;
+            }
+            else
+            {
+                // Debug.Log("Received data is empty");
+                return null;
             }
         }
 

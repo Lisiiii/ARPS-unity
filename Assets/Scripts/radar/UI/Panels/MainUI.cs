@@ -156,7 +156,7 @@ namespace radar.ui.panel
             RawCameraView.SwitchInferenceButton.onClick.AddListener(() =>
             {
                 RayCaster YoloInferencer = GameObject.Find("Yolov8Inferencer").GetComponent<RayCaster>();
-                YoloInferencer.ifInference_ = !YoloInferencer.ifInference_;
+                YoloInferencer.swichInference();
 
                 if (YoloInferencer.ifInference_)
                 {

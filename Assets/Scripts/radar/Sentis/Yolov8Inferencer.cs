@@ -6,37 +6,40 @@ using System;
 
 namespace radar.Yolov8
 {
+    // Attention: The class is used to run inference on the YOLOv8 model using the Sentis library. 
+    // It is NOT suitable for yolov5 or yoloV7 models.
     public class Yolov8Inferencer : IDisposable
     {
-        Worker worker;
-        private bool inferencePending = false;
-        private Tensor<float> outputTensor;
+        Worker worker_;
+        private bool inferencePending_ = false;
+        private Tensor<float> outputTensor_;
+        public int classCount_ = 80; // Number of classes in model
         public Yolov8Inferencer(ModelAsset inferenceModel)
         {
-            worker = new Worker(ModelLoader.Load(inferenceModel), BackendType.GPUCompute);
+            worker_ = new Worker(ModelLoader.Load(inferenceModel), BackendType.GPUCompute);
         }
 
         // Asynchronously run inference on the input texture,if the inference is done, return the result,or return null.
-        public List<List<BoundingBox>> inference(Texture2D inputTexture, float confidenceThreshold, float nmsThreshold)
+        public Dictionary<int, List<BoundingBox>> inference(Texture2D inputTexture, float confidenceThreshold, float nmsThreshold)
         {
-            if (!inferencePending)
+            if (!inferencePending_)
             {
                 using Tensor<float> inputTensor = TextureConverter.ToTensor(inputTexture, width: 640, height: 640);
-                worker.Schedule(inputTensor);
-                outputTensor = worker.PeekOutput("output0") as Tensor<float>;
-                outputTensor.ReadbackRequest();
+                worker_.Schedule(inputTensor);
+                outputTensor_ = worker_.PeekOutput("output0") as Tensor<float>;
+                outputTensor_.ReadbackRequest();
 
-                inferencePending = true;
+                inferencePending_ = true;
                 inputTensor.Dispose();
             }
-            else if (inferencePending && outputTensor.IsReadbackRequestDone())
+            else if (inferencePending_ && outputTensor_.IsReadbackRequestDone())
             {
-                inferencePending = false;
-                var cpuTensorArray = outputTensor.DownloadToArray();
+                inferencePending_ = false;
+                var cpuTensorArray = outputTensor_.DownloadToArray();
 
-                List<List<BoundingBox>> results = postProcess(cpuTensorArray, 80, confidenceThreshold, nmsThreshold);
+                Dictionary<int, List<BoundingBox>> results = postProcess(cpuTensorArray, classCount_, confidenceThreshold, nmsThreshold);
 
-                outputTensor.Dispose();
+                outputTensor_.Dispose();
                 return results;
             }
             return null;
@@ -44,11 +47,11 @@ namespace radar.Yolov8
 
 
 
-        List<List<BoundingBox>> postProcess(float[] cpuTensorArray, int classCount, float confidenceThreshold, float nmsThreshold)
+        Dictionary<int, List<BoundingBox>> postProcess(float[] cpuTensorArray, int classCount, float confidenceThreshold, float nmsThreshold)
         {
-            // cpuTensor[i,j,k] (which is [1,84,8400]) = cpuTensorArray[i * 84 * 8400 + j * 8400 + k]
+            // cpuTensor[i,j,k] (which is [1, classCount + 4 ,8400]) = cpuTensorArray[i * (classCount + 4) * 8400 + j * 8400 + k]
 
-            List<List<BoundingBox>> finalResults = new List<List<BoundingBox>>();
+            Dictionary<int, List<BoundingBox>> finalResults = new Dictionary<int, List<BoundingBox>>();
             Dictionary<int, List<BoundingBox>> classBoundingBoxes = new Dictionary<int, List<BoundingBox>>();
 
             for (int i = 0; i < 8400; i++)
@@ -63,17 +66,18 @@ namespace radar.Yolov8
                         // float xMax = cpuTensor[0, 0, i] + cpuTensor[0, 2, i] / 2;
                         // float yMin = 640f - (cpuTensor[0, 1, i] + cpuTensor[0, 3, i] / 2);
                         // float yMax = 640f - (cpuTensor[0, 1, i] - cpuTensor[0, 3, i] / 2);
-                        float xMin = cpuTensorArray[0 * 84 * 8400 + 0 * 8400 + i] - cpuTensorArray[0 * 84 * 8400 + 2 * 8400 + i] / 2;
-                        float yMax = 640f - (cpuTensorArray[1 * 84 * 8400 + 1 * 8400 + i] - cpuTensorArray[1 * 84 * 8400 + 3 * 8400 + i] / 2);
-                        float xMax = cpuTensorArray[0 * 84 * 8400 + 0 * 8400 + i] + cpuTensorArray[0 * 84 * 8400 + 2 * 8400 + i] / 2;
-                        float yMin = 640f - (cpuTensorArray[1 * 84 * 8400 + 1 * 8400 + i] + cpuTensorArray[1 * 84 * 8400 + 3 * 8400 + i] / 2);
+                        float xMin = cpuTensorArray[0 * (classCount + 4) * 8400 + 0 * 8400 + i] - cpuTensorArray[0 * (classCount + 4) * 8400 + 2 * 8400 + i] / 2;
+                        float yMax = 640f - (cpuTensorArray[1 * (classCount + 4) * 8400 + 1 * 8400 + i] - cpuTensorArray[1 * (classCount + 4) * 8400 + 3 * 8400 + i] / 2);
+                        float xMax = cpuTensorArray[0 * (classCount + 4) * 8400 + 0 * 8400 + i] + cpuTensorArray[0 * (classCount + 4) * 8400 + 2 * 8400 + i] / 2;
+                        float yMin = 640f - (cpuTensorArray[1 * (classCount + 4) * 8400 + 1 * 8400 + i] + cpuTensorArray[1 * (classCount + 4) * 8400 + 3 * 8400 + i] / 2);
 
-                        if (!classBoundingBoxes.ContainsKey(classIndex))
+                        //  the output tensor is 4->classCount+4, so the classIndex should be minus 4
+                        if (!classBoundingBoxes.ContainsKey(classIndex - 4))
                         {
-                            classBoundingBoxes[classIndex] = new List<BoundingBox>();
+                            classBoundingBoxes[classIndex - 4] = new List<BoundingBox>();
                         }
 
-                        classBoundingBoxes[classIndex].Add(new BoundingBox
+                        classBoundingBoxes[classIndex - 4].Add(new BoundingBox
                         {
                             XMin = xMin,
                             XMax = xMax,
@@ -88,12 +92,9 @@ namespace radar.Yolov8
             foreach (var kvp in classBoundingBoxes)
             {
                 List<BoundingBox> suppressedBoxes = NMS.NonMaxSuppression(kvp.Value, nmsThreshold);
-                if (suppressedBoxes.Count > 0)
-                {
-                    finalResults.Add(suppressedBoxes);
-                }
+                if (suppressedBoxes.Count == 0) continue;
+                finalResults.Add(kvp.Key, suppressedBoxes);
             }
-
             return finalResults;
         }
         ~Yolov8Inferencer()
@@ -102,7 +103,7 @@ namespace radar.Yolov8
         }
         public void Dispose()
         {
-            worker.Dispose();
+            worker_.Dispose();
             GC.SuppressFinalize(this);
         }
     }
