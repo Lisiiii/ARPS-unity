@@ -143,7 +143,7 @@ namespace radar.ui.panel
                         COMView.Info.text = "已关闭端口";
                     else
                         COMView.Info.text = "关闭端口失败";
-                    if (SerialHandler.Connect(portName, 9600, Parity.None, 8, StopBits.One))
+                    if (SerialHandler.Connect(portName, 115200, Parity.None, 8, StopBits.One))
                         COMView.Info.text = "已连接到 " + portName;
                     else
                         COMView.Info.text = "连接失败";

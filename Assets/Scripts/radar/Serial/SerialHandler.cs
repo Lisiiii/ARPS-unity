@@ -6,47 +6,17 @@ using System.Threading;
 using UnityEngine;
 using radar.data;
 using Unity.Android.Gradle.Manifest;
+using System.Runtime.InteropServices;
+using radar.serial.crc;
+using radar.serial.package;
 
 namespace radar.serial
 {
     public class SerialHandler : MonoBehaviour
     {
-        string[] ports;
-        SerialPort current_sp;
-        private byte[] receivedData = new byte[1024];
+        private SerialPort current_sp_;
+        private Thread receiveThread_;
         public DataManager dataManager_;
-        void Start()
-        {
-            // Debug.Log("--- Serial Init ---");
-            // ports = ScanPorts();
-            // Debug.Log("Scaned ports count: " + ports.Length);
-            // foreach (string port in ports)
-            // {
-            //     if (port.Contains("COM1"))
-            //     {
-            //         if (ConnectToPort(ref current_sp, port, 9600, Parity.None, 8, StopBits.One))
-            //         {
-            //             Debug.Log("Connect to " + port);
-            //             StartCoroutine(SendDataToSerialPort());
-            //         }
-            //     }
-            // }
-        }
-        void Update()
-        {
-        }
-
-        // send data to serial port every 2 seconds (DEBUG) ---->
-        IEnumerator SendDataToSerialPort()
-        {
-            while (true)
-            {
-                yield return new WaitForSeconds(2);
-                SendData(ref current_sp, "Hello");
-                Debug.Log("Send data to " + current_sp.PortName);
-            }
-        }
-        // send data to serial port every 2 seconds (DEBUG) <----
 
         public string[] ScanPorts()
         {
@@ -55,15 +25,24 @@ namespace radar.serial
         }
         public bool Connect(string portName, int baudRate, Parity parity, int dataBits, StopBits stopBits)
         {
-            return ConnectToPort(ref current_sp, portName, baudRate, parity, dataBits, stopBits);
+            return ConnectToPort(ref current_sp_, portName, baudRate, parity, dataBits, stopBits);
         }
         public bool ClosePort()
         {
             try
             {
-                if (current_sp.IsOpen)
-                    current_sp.Close();
                 StopAllCoroutines();
+                if (receiveThread_ != null && receiveThread_.IsAlive)
+                {
+                    receiveThread_.Abort();
+                    receiveThread_ = null;
+                }
+                if (current_sp_ != null)
+                {
+                    current_sp_.Close();
+                    current_sp_.Dispose();
+                    current_sp_ = null;
+                }
                 return true;
             }
             catch (Exception ex)
@@ -77,12 +56,11 @@ namespace radar.serial
             try
             {
                 sp = new SerialPort(portName, baudRate, parity, dataBits, stopBits);
+                sp.ReadTimeout = 50;
                 sp.Open();
-                Thread thread = new Thread(new ThreadStart(DataReceivedHandler));
-                thread.Start();
-                // DEBUG
-                StartCoroutine(SendDataToSerialPort());
-                // DEBUG
+
+                receiveThread_ = new Thread(new ThreadStart(DataReceiveHandler));
+                receiveThread_.Start();
                 return true;
             }
             catch (Exception ex)
@@ -92,97 +70,79 @@ namespace radar.serial
             }
         }
 
-        private void DataReceivedHandler()
+        public void SendData(byte[] send, int offSet, int count)
         {
+            try
+            {
+                if (current_sp_.IsOpen)
+                {
+                    current_sp_.Write(send, offSet, count);
+                }
+                else
+                {
+                    current_sp_.Open();
+                    current_sp_.Write(send, offSet, count);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.Log(ex);
+            }
+        }
+
+        private void DataReceiveHandler()
+        {
+            int headerSize = Marshal.SizeOf(typeof(FrameHeader));
+
             while (true)
             {
-                if (current_sp.IsOpen)
+                // Check if the thread is alive before proceeding
+                if (current_sp_ == null || !current_sp_.IsOpen) continue;
+                int count = current_sp_.BytesToRead;
+                if (count < headerSize) continue;
+
+                // Read all data in one time
+                byte[] totalBuffer = new byte[Constants.FrameDataMaxLength];
+                current_sp_.Read(totalBuffer, 0, count);
+                byte[] headerBuffer = totalBuffer[..headerSize];
+
+                // Check if the first byte is 0xA5 (SOF) and CRC8 is valid
+                if (totalBuffer[0] != 0xA5) continue;
+                if (!DjiCrc.VerifyCrc8(headerBuffer)) continue;
+
+                // Reinterpret the header and body
+                FrameHeader header = Marshal.PtrToStructure<FrameHeader>(Marshal.UnsafeAddrOfPinnedArrayElement(headerBuffer, 0));
+                FrameBody body;
+                body.Data = new byte[header.DataLength];
+
+                byte[] bodyBuffer = totalBuffer[headerSize..(headerSize + header.DataLength + 2 * sizeof(ushort))];
+                if (!DjiCrc.VerifyCrc16(totalBuffer[..(headerBuffer.Length + bodyBuffer.Length)])) continue;
+
+                body = Marshal.PtrToStructure<FrameBody>(Marshal.UnsafeAddrOfPinnedArrayElement(bodyBuffer, 0));
+                switch (body.CommandId)
                 {
-                    int count = current_sp.BytesToRead;
-                    if (count > 0)
-                    {
-                        byte[] readBuffer = new byte[count];
-                        try
-                        {
-                            current_sp.Read(readBuffer, 0, count);
-                            // StringBuilder sb = new StringBuilder();
-                            // for (int i = 0; i < readBuffer.Length; i++)
-                            // {
-                            //     sb.AppendFormat("{0:x2}" + "", readBuffer[i]);
-                            // }
-                            // Debug.Log(sb.ToString());
-                            receivedData = readBuffer;
-                            StateDatas receivedStateDatas = ParseData(receivedData);
-                            if (receivedStateDatas != null)
-                            {
-                                dataManager_.updatedStateQueue_.Enqueue(receivedStateDatas);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Debug.Log(ex.Message);
-                        }
-                    }
+                    // case 0x0001: // Game Status
+                    //     break;
+                    // case 0x0003: // Game Robot HP
+                    //     break;
+                    // case 0x0101: // Game Buff
+                    //     break;
+                    // case 0x020E: // Radar Status
+                    //     break;
+                    // case 0x0301: // Allied Robot Info
+                    //     break;
+                    default:
+                        Debug.Log("command ID: " + body.CommandId.ToString("X4"));
+                        break;
                 }
-                Thread.Sleep(10);
+
             }
         }
 
-        private StateDatas ParseData(byte[] readBuffer)
+        private void OnDestroy()
         {
-            if (receivedData.Length > 0)
-            {
-                // Debug.Log("Received data: " + receivedData.Length);
-                StateDatas stateData = new StateDatas();
-                // TODO : Fill the stateData object with parsed data
-                return stateData;
-            }
-            else
-            {
-                // Debug.Log("Received data is empty");
-                return null;
-            }
+            ClosePort();
         }
-
-        private void SendData(ref SerialPort sp, string _info)
-        {
-            try
-            {
-                if (sp.IsOpen)
-                {
-                    sp.WriteLine(_info);
-                }
-                else
-                {
-                    sp.Open();
-                    sp.WriteLine(_info);
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.Log(ex);
-            }
-        }
-        private void SendData(ref SerialPort sp, byte[] send, int offSet, int count)
-        {
-            try
-            {
-                if (sp.IsOpen)
-                {
-                    sp.Write(send, offSet, count);
-                }
-                else
-                {
-                    sp.Open();
-                    sp.Write(send, offSet, count);
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.Log(ex);
-            }
-        }
-
     }
 
 }
