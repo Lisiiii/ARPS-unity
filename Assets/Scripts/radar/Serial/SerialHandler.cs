@@ -14,9 +14,25 @@ namespace radar.serial
 {
     public class SerialHandler : MonoBehaviour
     {
+        public static SerialHandler Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = FindAnyObjectByType<SerialHandler>();
+                    if (_instance == null)
+                    {
+                        GameObject obj = new GameObject("SerialHandler");
+                        _instance = obj.AddComponent<SerialHandler>();
+                    }
+                }
+                return _instance;
+            }
+        }
+        private static SerialHandler _instance;
         private SerialPort current_sp_;
         private Thread receiveThread_;
-        public DataManager dataManager_;
 
         public string[] ScanPorts()
         {
@@ -70,18 +86,19 @@ namespace radar.serial
             }
         }
 
-        public void SendData(byte[] send, int offSet, int count)
+        public void SendData(int commandId, byte[] data)
         {
+            byte[] dataToSend = packageData(commandId, data);
             try
             {
                 if (current_sp_.IsOpen)
                 {
-                    current_sp_.Write(send, offSet, count);
+                    current_sp_.Write(dataToSend, 0, dataToSend.Length);
                 }
                 else
                 {
                     current_sp_.Open();
-                    current_sp_.Write(send, offSet, count);
+                    current_sp_.Write(dataToSend, 0, dataToSend.Length);
                 }
             }
             catch (Exception ex)
@@ -137,6 +154,51 @@ namespace radar.serial
                 }
 
             }
+        }
+
+        private byte[] packageData(int commandId, byte[] data)
+        {
+            Frame frame = new();
+            frame.Header.SOF = 0xA5;
+            frame.Header.DataLength = (ushort)data.Length;
+            frame.Header.Sequence = 0x00;
+            frame.Header.Crc8 = 0x00; // Placeholder
+
+            byte[] headerBuffer = new byte[Marshal.SizeOf(typeof(FrameHeader))];
+            IntPtr headerPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(FrameHeader)));
+            try
+            {
+                Marshal.StructureToPtr(frame.Header, headerPtr, false);
+                Marshal.Copy(headerPtr, headerBuffer, 0, headerBuffer.Length);
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(headerPtr);
+            }
+            DjiCrc.AppendCrc8(ref headerBuffer);
+
+            frame.Body.CommandId = (ushort)commandId;
+            frame.Body.Data = data;
+            frame.Body.Crc16 = 0x00; // Placeholder
+
+            byte[] bodyBuffer = new byte[2 * sizeof(ushort) + data.Length];
+            IntPtr bodyPtr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(FrameBody)));
+            try
+            {
+                Marshal.StructureToPtr(frame.Body, bodyPtr, false);
+                Marshal.Copy(bodyPtr, bodyBuffer, 0, bodyBuffer.Length);
+            }
+            finally
+            {
+                Marshal.FreeHGlobal(bodyPtr);
+            }
+            DjiCrc.AppendCrc16(ref bodyBuffer);
+
+            byte[] totalBuffer = new byte[headerBuffer.Length + bodyBuffer.Length];
+            Buffer.BlockCopy(headerBuffer, 0, totalBuffer, 0, headerBuffer.Length);
+            Buffer.BlockCopy(bodyBuffer, 0, totalBuffer, headerBuffer.Length, bodyBuffer.Length);
+
+            return totalBuffer;
         }
 
         private void OnDestroy()

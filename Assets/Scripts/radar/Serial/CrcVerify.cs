@@ -45,7 +45,7 @@ namespace radar.serial.crc
         }
 
         // Appends the CRC8 checksum to the end of the data array. The last byte of the data array will be replaced with the checksum.
-        public static void AppendCrc8(byte[] data)
+        public static void AppendCrc8(ref byte[] data)
         {
             if (data.Length < 1) return;
             byte checksum = CalculateCrc8(data[..^1]);
@@ -99,7 +99,7 @@ namespace radar.serial.crc
         }
 
         // Appends the CRC16 checksum to the end of the data array. The last two bytes of the data array will be replaced with the checksum.
-        public static void AppendCrc16(byte[] data)
+        public static void AppendCrc16(ref byte[] data)
         {
             if (data.Length < 2) return;
             ushort checksum = CalculateCrc16(data[..^2]);

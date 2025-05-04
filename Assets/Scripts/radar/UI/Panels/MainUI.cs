@@ -3,6 +3,7 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using radar.raycast;
 
 namespace radar.ui.panel
 {

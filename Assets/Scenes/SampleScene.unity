@@ -430,7 +430,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2056a33bc9069f442be041275920ac1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dataManager_: {fileID: 323380598}
 --- !u!1 &323380597
 GameObject:
   m_ObjectHideFlags: 0
@@ -442,7 +441,7 @@ GameObject:
   - component: {fileID: 323380599}
   - component: {fileID: 323380598}
   m_Layer: 0
-  m_Name: GameStateManager
+  m_Name: DataManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -460,7 +459,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e920ec3bbb773143b2729ff5244dd6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isDataUpdated_: 0
+  sendFrequencyHz: 10
 --- !u!4 &323380599
 Transform:
   m_ObjectHideFlags: 0
@@ -1183,7 +1182,7 @@ VideoPlayer:
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 0}
-  m_TargetTexture: {fileID: 8400000, guid: b9496d38c0f5c3d4ca9c9216efa66aa2, type: 2}
+  m_TargetTexture: {fileID: 8400000, guid: 212ceaf1e05fdb74d84f8e88f8d3e319, type: 2}
   m_TimeReference: 0
   m_TargetMaterialRenderer: {fileID: 0}
   m_TargetMaterialProperty: <noninit>

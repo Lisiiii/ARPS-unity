@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace radar.data
 {
-    public enum RobotType { Hero, Engineer, Infantry1, Infantry2, Infantry3, Sentry, Dart, Drone, Outpost, Base }
+    public enum RobotType { Hero, Engineer, Infantry3, Infantry4, Infantry5, Sentry, Dart, Drone, Outpost, Base }
     public enum Team { Blue, Red }
     public enum GameStage { NotStarted, Preparing, Countdown, Started, Finished }
 
@@ -33,9 +33,9 @@ namespace radar.data
             enemyRobotStates_ = new Dictionary<RobotType, RobotState>{
                 { RobotType.Hero, new RobotState() { IsTracked = false,Position = Vector2.zero,LastUpdateTime = DateTime.Now,HP = 200}},
                 { RobotType.Engineer, new RobotState() { IsTracked = false, Position = Vector2.zero, LastUpdateTime = DateTime.Now, HP = 200}},
-                { RobotType.Infantry1, new RobotState() { IsTracked = false, Position = Vector2.zero, LastUpdateTime = DateTime.Now, HP = 200}},
-                { RobotType.Infantry2, new RobotState() { IsTracked = false, Position = Vector2.zero, LastUpdateTime = DateTime.Now, HP = 200}},
                 { RobotType.Infantry3, new RobotState() { IsTracked = false, Position = Vector2.zero, LastUpdateTime = DateTime.Now, HP = 200}},
+                { RobotType.Infantry4, new RobotState() { IsTracked = false, Position = Vector2.zero, LastUpdateTime = DateTime.Now, HP = 200}},
+                { RobotType.Infantry5, new RobotState() { IsTracked = false, Position = Vector2.zero, LastUpdateTime = DateTime.Now, HP = 200}},
                 { RobotType.Sentry, new RobotState() { IsTracked = false, Position = Vector2.zero, LastUpdateTime = DateTime.Now, HP = 600}},
                 { RobotType.Dart, new RobotState() { IsTracked = false, Position = Vector2.zero, LastUpdateTime = DateTime.Now, HP = -1}},
                 { RobotType.Drone, new RobotState() { IsTracked = false, Position = Vector2.zero, LastUpdateTime = DateTime.Now, HP = -1}},

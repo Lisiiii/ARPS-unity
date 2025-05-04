@@ -91,4 +91,22 @@ namespace radar.serial.package
         public byte DartRemainingTime;
         public ushort DartInfoData;
     }
+
+    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, Pack = 1)]
+    public struct MapRobotData
+    {
+        public ushort HeroPositionX;
+        public ushort HeroPositionY;
+        public ushort EngineerPositionX;
+        public ushort EngineerPositionY;
+        public ushort Infantry3PositionX;
+        public ushort Infantry3PositionY;
+        public ushort Infantry4PositionX;
+        public ushort Infantry4PositionY;
+        public ushort Infantry5PositionX;
+        public ushort Infantry5PositionY;
+        public ushort SentryPositionX;
+        public ushort SentryPositionY;
+    }
+
 }
