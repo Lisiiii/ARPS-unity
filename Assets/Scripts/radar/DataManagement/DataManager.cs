@@ -28,7 +28,7 @@ public class DataManager : MonoBehaviour
     }
     public ConcurrentQueue<StateDatas> updatedStateQueue = new ConcurrentQueue<StateDatas>();
     public event Action<StateDatas> OnDataUpdated;
-    public StateDatas stateData => stateData_;    // Read-only property to access the state data
+    public ref StateDatas stateData => ref stateData_;    // Read-only property to access the state data
     public float sendFrequencyHz = 10f;
     private static DataManager _instance;
     private StateDatas stateData_ = new();
@@ -73,14 +73,15 @@ public class DataManager : MonoBehaviour
 
     private void UpdateData()
     {
-        foreach (var robotState in stateData_.enemyRobotStates_)
+        foreach (var robotState in stateData_.enemyRobots.Data)
         {
             if (!robotState.Value.IsTracked) continue;
 
-            if (DateTime.Now - robotState.Value.LastUpdateTime > TimeSpan.FromSeconds(3))
+            if (DateTime.Now - robotState.Value.LastUpdateTime > TimeSpan.FromSeconds(2))
             {
                 robotState.Value.IsTracked = false;
                 robotState.Value.Position = Vector2.zero;
+                isDataUpdated_ = true;
             }
 
             // TODO: Using Kalman filter to smooth the position data 
@@ -90,18 +91,18 @@ public class DataManager : MonoBehaviour
     private void SendData()
     {
         MapRobotData mapDataToSend = new MapRobotData();
-        mapDataToSend.HeroPositionX = (ushort)stateData_.enemyRobotStates_[RobotType.Hero].Position.x;
-        mapDataToSend.HeroPositionY = (ushort)stateData_.enemyRobotStates_[RobotType.Hero].Position.y;
-        mapDataToSend.EngineerPositionX = (ushort)stateData_.enemyRobotStates_[RobotType.Engineer].Position.x;
-        mapDataToSend.EngineerPositionY = (ushort)stateData_.enemyRobotStates_[RobotType.Engineer].Position.y;
-        mapDataToSend.Infantry3PositionX = (ushort)stateData_.enemyRobotStates_[RobotType.Infantry5].Position.x;
-        mapDataToSend.Infantry3PositionY = (ushort)stateData_.enemyRobotStates_[RobotType.Infantry5].Position.y;
-        mapDataToSend.Infantry4PositionX = (ushort)stateData_.enemyRobotStates_[RobotType.Infantry4].Position.x;
-        mapDataToSend.Infantry4PositionY = (ushort)stateData_.enemyRobotStates_[RobotType.Infantry4].Position.y;
-        mapDataToSend.Infantry5PositionX = (ushort)stateData_.enemyRobotStates_[RobotType.Infantry5].Position.x;
-        mapDataToSend.Infantry5PositionY = (ushort)stateData_.enemyRobotStates_[RobotType.Infantry5].Position.y;
-        mapDataToSend.SentryPositionX = (ushort)stateData_.enemyRobotStates_[RobotType.Sentry].Position.x;
-        mapDataToSend.SentryPositionY = (ushort)stateData_.enemyRobotStates_[RobotType.Sentry].Position.y;
+        mapDataToSend.HeroPositionX = (ushort)stateData_.enemyRobots.Data[RobotType.Hero].Position.x;
+        mapDataToSend.HeroPositionY = (ushort)stateData_.enemyRobots.Data[RobotType.Hero].Position.y;
+        mapDataToSend.EngineerPositionX = (ushort)stateData_.enemyRobots.Data[RobotType.Engineer].Position.x;
+        mapDataToSend.EngineerPositionY = (ushort)stateData_.enemyRobots.Data[RobotType.Engineer].Position.y;
+        mapDataToSend.Infantry3PositionX = (ushort)stateData_.enemyRobots.Data[RobotType.Infantry5].Position.x;
+        mapDataToSend.Infantry3PositionY = (ushort)stateData_.enemyRobots.Data[RobotType.Infantry5].Position.y;
+        mapDataToSend.Infantry4PositionX = (ushort)stateData_.enemyRobots.Data[RobotType.Infantry4].Position.x;
+        mapDataToSend.Infantry4PositionY = (ushort)stateData_.enemyRobots.Data[RobotType.Infantry4].Position.y;
+        mapDataToSend.Infantry5PositionX = (ushort)stateData_.enemyRobots.Data[RobotType.Infantry5].Position.x;
+        mapDataToSend.Infantry5PositionY = (ushort)stateData_.enemyRobots.Data[RobotType.Infantry5].Position.y;
+        mapDataToSend.SentryPositionX = (ushort)stateData_.enemyRobots.Data[RobotType.Sentry].Position.x;
+        mapDataToSend.SentryPositionY = (ushort)stateData_.enemyRobots.Data[RobotType.Sentry].Position.y;
 
         byte[] dataToSend = new byte[Marshal.SizeOf(typeof(MapRobotData))];
         IntPtr ptr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(MapRobotData)));

@@ -3,66 +3,250 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-using radar.raycast;
+using radar.detector;
+using System;
+using Unity.VisualScripting;
+using radar.data;
+using System.Collections.Generic;
 
 namespace radar.ui.panel
 {
+
+
+    #region GAMETIME_VIEW
+    public class GameTimeType
+    {
+        public Transform GameTimeRoot_;
+        public TextMeshProUGUI StateName_;
+        public TextMeshProUGUI Time_;
+        public TextMeshProUGUI Round_;
+        public GameTimeType(Transform GameTimeRoot)
+        {
+            GameTimeRoot_ = GameTimeRoot;
+            StateName_ = GameTimeRoot.Find("StateName").GetComponent<TextMeshProUGUI>();
+            Time_ = GameTimeRoot.Find("Time").GetComponent<TextMeshProUGUI>();
+            Round_ = GameTimeRoot.Find("Round").GetComponent<TextMeshProUGUI>();
+        }
+        public void SetStateName(GameStage stage)
+        {
+            switch (stage)
+            {
+                case GameStage.NotStarted:
+                    StateName_.text = "未开始";
+                    break;
+                case GameStage.Preparing:
+                    StateName_.text = "准备中";
+                    break;
+                case GameStage.Countdown:
+                    StateName_.text = "倒计时";
+                    break;
+                case GameStage.Started:
+                    StateName_.text = "进行中";
+                    break;
+                case GameStage.Finished:
+                    StateName_.text = "已结束";
+                    break;
+            }
+        }
+        public void SetRound(int round, int bo = 3)
+        {
+            Round_.text = "回合" + round.ToString() + "  /  " + bo.ToString();
+        }
+        public void SetTime(string time)
+        {
+            Time_.text = time;
+        }
+
+    };
+    #endregion
+
+    #region ENEMYSIDE_VIEW
+    public class EnemySideType
+    {
+        public Transform EnemySideRoot_;
+        public TextMeshProUGUI Color_;
+        public Button SwitchButton_;
+
+        public EnemySideType(Transform enemySideRoot)
+        {
+            EnemySideRoot_ = enemySideRoot;
+            Color_ = enemySideRoot.Find("Color").GetComponent<TextMeshProUGUI>();
+            SwitchButton_ = enemySideRoot.Find("SwitchButton").GetComponent<Button>();
+
+            SwitchButton_.onClick.AddListener(() =>
+            {
+                DataManager.Instance.UploadData(
+                    DataManager.Instance.stateData.gameState_.EnemySide == Team.Blue ? Team.Red : Team.Blue,
+                    (team) =>
+                    {
+                        DataManager.Instance.stateData.gameState_.EnemySide = team;
+                    });
+            });
+        }
+        public void SetEnemySide(Team team)
+        {
+            Color_.color = (team == Team.Blue) ? Color.blue : Color.red;
+            Color_.text = (team == Team.Blue) ? "蓝方" : "红方";
+        }
+
+    };
+    #endregion
+
+    #region ROBOT_STATUS_VIEW
+    public class RobotStatusType
+    {
+        public RobotStatusType(Transform root)
+        {
+            RobotStatusRoot_ = root;
+            RobotPrefabList_.Add(RobotType.Hero, new RobotPrefab(root.Find("Hero")));
+            RobotPrefabList_.Add(RobotType.Engineer, new RobotPrefab(root.Find("Engineer")));
+            RobotPrefabList_.Add(RobotType.Infantry3, new RobotPrefab(root.Find("Infantry_1")));
+            RobotPrefabList_.Add(RobotType.Infantry4, new RobotPrefab(root.Find("Infantry_2")));
+            RobotPrefabList_.Add(RobotType.Sentry, new RobotPrefab(root.Find("Sentry")));
+        }
+        public Transform RobotStatusRoot_;
+
+        public Dictionary<RobotType, RobotPrefab> RobotPrefabList_ = new Dictionary<RobotType, RobotPrefab>();
+        public class RobotPrefab
+        {
+            public RobotPrefab(Transform robotPrefabRoot)
+            {
+                RobotNumber = robotPrefabRoot.Find("Number").GetComponent<TextMeshProUGUI>();
+                RobotName = robotPrefabRoot.Find("Name").GetComponent<TextMeshProUGUI>();
+                RobotState = robotPrefabRoot.Find("State").GetComponent<TextMeshProUGUI>();
+                RobotHp = robotPrefabRoot.Find("HP").GetComponent<Slider>();
+            }
+            private TextMeshProUGUI RobotName;
+            private TextMeshProUGUI RobotNumber;
+            private TextMeshProUGUI RobotState;
+            private Slider RobotHp;
+            public void SetRobotName(string name)
+            {
+                RobotName.text = radar.data.RobotName.Chinese[Enum.Parse<RobotType>(name)];
+            }
+            public void SetRobotNumber(int number, Team team)
+            {
+                RobotNumber.color = (team == Team.Blue) ? Color.blue : Color.red;
+                RobotNumber.text = ((team == Team.Blue) ? "B" : "R") + number.ToString();
+            }
+            public void SetRobotState(bool isTracked)
+            {
+                RobotState.text = isTracked ? "已被识别" : "未被识别";
+                RobotState.color = isTracked ? Color.green : new Color(1.0f, 0.5f, 0.0f);
+            }
+            public void SetRobotHp(float hp, Team team)
+            {
+                RobotHp.maxValue = 200;
+                RobotHp.minValue = 0;
+                RobotHp.value = hp;
+                RobotHp.gameObject.transform.Find("HPText").GetComponent<TextMeshProUGUI>().text = hp.ToString() + "/200";
+                RobotHp.gameObject.transform.Find("Fill Area/Fill").GetComponent<Image>().color = team == Team.Blue ? Color.blue : Color.red;
+            }
+
+
+        };
+    };
+    #endregion
+    public class TerminalBarType
+    {
+        public Transform TerminalBarRoot;
+        public TextMeshProUGUI TerminalText;
+        public TerminalBarType(Transform terminalBarRoot)
+        {
+            TerminalBarRoot = terminalBarRoot;
+            TerminalText = terminalBarRoot.Find("Background/Info").GetComponent<TextMeshProUGUI>();
+        }
+        public void SetTerminalText(string text)
+        {
+            TerminalText.text = text;
+        }
+        public void SetTerminalTextColor(Color color)
+        {
+            TerminalText.color = color;
+        }
+    }
     #region INFOBAR_VIEW
-    struct InfoBarViewType
+    public class InfoBarViewType
     {
         public Transform InfoBarViewRoot;
         public GameTimeType GameTime;
         public EnemySideType EnemySide;
         public RobotStatusType RobotStatus;
         public TerminalBarType TerminalBar;
-    };
-    struct GameTimeType
-    {
-        public Transform GameTimeRoot;
-        public TextMeshProUGUI StateName;
-        public TextMeshProUGUI Time;
-        public TextMeshProUGUI Round;
-    };
-    struct EnemySideType
-    {
-        public Transform EnemySideRoot;
-        public TextMeshProUGUI Title;
-        public TextMeshProUGUI Color;
-        public Button SwitchButton;
-    };
-    struct RobotStatusType
-    {
-        public Transform RobotStatusRoot;
-        public Transform Hero;
-        public Transform Engineer;
-        public Transform Infantry_1;
-        public Transform Infantry_2;
-        public Transform Sentry;
-    };
-    struct TerminalBarType
-    {
-        public Transform TerminalBarRoot;
-        public TextMeshProUGUI TerminalText;
+
+        public InfoBarViewType(Transform rootTransform)
+        {
+            InfoBarViewRoot = rootTransform.Find("InfoBarView");
+            GameTime = new GameTimeType(rootTransform.Find("InfoBarView/GameTime"));
+            EnemySide = new EnemySideType(rootTransform.Find("InfoBarView/EnemySide"));
+            RobotStatus = new RobotStatusType(rootTransform.Find("InfoBarView/RobotStatus"));
+            TerminalBar = new TerminalBarType(rootTransform.Find("InfoBarView/TerminalBar"));
+        }
     };
     #endregion
-
     #region SWITCH_BUTTON_VIEW
-    struct SwitchButtonViewType
+    public class SwitchButtonViewType
     {
         public Transform SwitchButtonViewRoot;
         public Button CallibrationButton;
         public Button IOButton;
+
+        public SwitchButtonViewType(Transform rootTransform)
+        {
+            SwitchButtonViewRoot = rootTransform.Find("SwitchButtonView");
+            CallibrationButton = rootTransform.Find("SwitchButtonView/CallibrationButton").GetComponent<Button>();
+            IOButton = rootTransform.Find("SwitchButtonView/IOButton").GetComponent<Button>();
+
+            CallibrationButton.onClick.AddListener(() =>
+            {
+                UIManager.ShowPanel<CalibrationUI>();
+                UIManager.GetPanel<CalibrationUI>().setCameraViewEnabled(true);
+            });
+
+            IOButton.onClick.AddListener(() =>
+            {
+                UIManager.ShowPanel<IOHandleUI>();
+            });
+        }
+
+
     };
     #endregion
 
     #region RAW_CAMERA_VIEW
-    struct RawCameraViewType
+    public class RawCameraViewType
     {
         public Transform RawCameraViewRoot;
         public RawImage RaycastCameraView;
         public TextMeshProUGUI CameraInfo;
         public Button SwitchInferenceButton;
         public GameObject InferenceIndicator;
+
+        public RawCameraViewType(Transform rootTransform)
+        {
+            RawCameraViewRoot = rootTransform;
+            RaycastCameraView = RawCameraViewRoot.Find("RawCameraView/Background/RaycastCameraView").GetComponent<RawImage>();
+            CameraInfo = RawCameraViewRoot.Find("RawCameraView/Background/Info").GetComponent<TextMeshProUGUI>();
+            SwitchInferenceButton = RawCameraViewRoot.Find("RawCameraView/Background/SwitchInferenceButton").GetComponent<Button>();
+            InferenceIndicator = RawCameraViewRoot.Find("RawCameraView/Background/InferenceIndicator").gameObject;
+
+            SwitchInferenceButton.onClick.AddListener(() =>
+               {
+                   Detector detector = GameObject.Find("Detector").GetComponent<Detector>();
+                   detector.SwitchInference();
+
+                   if (detector.ifInference_)
+                   {
+                       InferenceIndicator.GetComponent<Image>().color = Color.green;
+                       InferenceIndicator.transform.Find("Text").GetComponent<TextMeshProUGUI>().text = "识别运行中";
+                   }
+                   else
+                   {
+                       InferenceIndicator.GetComponent<Image>().color = Color.yellow;
+                       InferenceIndicator.transform.Find("Text").GetComponent<TextMeshProUGUI>().text = "识别已关闭";
+                   }
+               });
+        }
     };
     #endregion
 
@@ -74,103 +258,33 @@ namespace radar.ui.panel
         InfoBarViewType InfoBarView;
         SwitchButtonViewType SwitchButtonView;
         RawCameraViewType RawCameraView;
+        public GameObject robotPrefab_;
+        public GameObject minimap_;
+        private Dictionary<RobotType, GameObject> robotList_;
+
+        private System.DateTime initialTime;
+        private float countdownTime = 7 * 60;
         public override void Initialize()
         {
             MainPanelCanvasRoot = GetComponent<Canvas>();
 
-            InitializeInfoBarView();
-            InitializeSwitchButtonView();
-            InitializeRawCameraView();
+            InfoBarView = new InfoBarViewType(MainPanelCanvasRoot.transform);
+            SwitchButtonView = new SwitchButtonViewType(MainPanelCanvasRoot.transform);
+            RawCameraView = new RawCameraViewType(MainPanelCanvasRoot.transform);
+
+            minimap_ = GameObject.FindGameObjectWithTag("Minimap");
+            robotPrefab_ = Resources.Load<GameObject>("Prefab/Robot");
 
             initialTime = System.DateTime.Now.AddMinutes(7);
+
+            DataManager.Instance.OnDataUpdated += UpdateRobotPosition;
+            DataManager.Instance.OnDataUpdated += UpdateGameState;
         }
         public override void Update()
         {
             UpdateGameTime();
         }
 
-        private System.DateTime initialTime;
-        private float countdownTime = 7 * 60;
-        private void InitializeInfoBarView()
-        {
-            InfoBarView = new InfoBarViewType
-            {
-                InfoBarViewRoot = MainPanelCanvasRoot.transform.Find("InfoBarView"),
-                GameTime = new GameTimeType
-                {
-                    GameTimeRoot = MainPanelCanvasRoot.transform.Find("InfoBarView/GameTime"),
-                    StateName = MainPanelCanvasRoot.transform.Find("InfoBarView/GameTime/StateName").GetComponent<TextMeshProUGUI>(),
-                    Time = MainPanelCanvasRoot.transform.Find("InfoBarView/GameTime/Time").GetComponent<TextMeshProUGUI>(),
-                    Round = MainPanelCanvasRoot.transform.Find("InfoBarView/GameTime/Round").GetComponent<TextMeshProUGUI>()
-                },
-                EnemySide = new EnemySideType
-                {
-                    EnemySideRoot = MainPanelCanvasRoot.transform.Find("InfoBarView/EnemySide"),
-                    Title = MainPanelCanvasRoot.transform.Find("InfoBarView/EnemySide/Title").GetComponent<TextMeshProUGUI>(),
-                    Color = MainPanelCanvasRoot.transform.Find("InfoBarView/EnemySide/Color").GetComponent<TextMeshProUGUI>(),
-                    SwitchButton = MainPanelCanvasRoot.transform.Find("InfoBarView/EnemySide/SwitchButton").GetComponent<Button>()
-                },
-                RobotStatus = new RobotStatusType
-                {
-                    RobotStatusRoot = MainPanelCanvasRoot.transform.Find("InfoBarView/RobotStatus"),
-                    Hero = MainPanelCanvasRoot.transform.Find("InfoBarView/RobotStatus/Hero"),
-                    Engineer = MainPanelCanvasRoot.transform.Find("InfoBarView/RobotStatus/Engineer"),
-                    Infantry_1 = MainPanelCanvasRoot.transform.Find("InfoBarView/RobotStatus/Infantry_1"),
-                    Infantry_2 = MainPanelCanvasRoot.transform.Find("InfoBarView/RobotStatus/Infantry_2"),
-                    Sentry = MainPanelCanvasRoot.transform.Find("InfoBarView/RobotStatus/Sentry")
-                },
-                TerminalBar = new TerminalBarType
-                {
-                    TerminalBarRoot = MainPanelCanvasRoot.transform.Find("InfoBarView/TerminalBar"),
-                    TerminalText = MainPanelCanvasRoot.transform.Find("InfoBarView/TerminalBar/Background/Info").GetComponent<TextMeshProUGUI>()
-                }
-            };
-        }
-        private void InitializeSwitchButtonView()
-        {
-            SwitchButtonView = new SwitchButtonViewType
-            {
-                SwitchButtonViewRoot = MainPanelCanvasRoot.transform.Find("SwitchButtonView"),
-                CallibrationButton = MainPanelCanvasRoot.transform.Find("SwitchButtonView/CallibrationButton").GetComponent<Button>(),
-                IOButton = MainPanelCanvasRoot.transform.Find("SwitchButtonView/IOButton").GetComponent<Button>()
-            };
-            SwitchButtonView.CallibrationButton.onClick.AddListener(() =>
-            {
-                UIManager.ShowPanel<CalibrationUI>();
-                UIManager.GetPanel<CalibrationUI>().setCameraViewEnabled(true);
-            });
-            SwitchButtonView.IOButton.onClick.AddListener(() =>
-            {
-                UIManager.ShowPanel<IOHandleUI>();
-            });
-        }
-        private void InitializeRawCameraView()
-        {
-            RawCameraView = new RawCameraViewType
-            {
-                RawCameraViewRoot = MainPanelCanvasRoot.transform.Find("RawCameraView"),
-                RaycastCameraView = MainPanelCanvasRoot.transform.Find("RawCameraView/Background/RaycastCameraView").GetComponent<RawImage>(),
-                CameraInfo = MainPanelCanvasRoot.transform.Find("RawCameraView/Background/Info").GetComponent<TextMeshProUGUI>(),
-                SwitchInferenceButton = MainPanelCanvasRoot.transform.Find("RawCameraView/Background/SwitchInferenceButton").GetComponent<Button>(),
-                InferenceIndicator = MainPanelCanvasRoot.transform.Find("RawCameraView/Background/InferenceIndicator").gameObject
-            };
-            RawCameraView.SwitchInferenceButton.onClick.AddListener(() =>
-            {
-                RayCaster YoloInferencer = GameObject.Find("Yolov8Inferencer").GetComponent<RayCaster>();
-                YoloInferencer.swichInference();
-
-                if (YoloInferencer.ifInference_)
-                {
-                    RawCameraView.InferenceIndicator.GetComponent<Image>().color = Color.green;
-                    RawCameraView.InferenceIndicator.transform.Find("Text").GetComponent<TextMeshProUGUI>().text = "识别运行中";
-                }
-                else
-                {
-                    RawCameraView.InferenceIndicator.GetComponent<Image>().color = Color.yellow;
-                    RawCameraView.InferenceIndicator.transform.Find("Text").GetComponent<TextMeshProUGUI>().text = "识别已关闭";
-                }
-            });
-        }
         private void UpdateGameTime()
         {
             countdownTime = (float)(initialTime - System.DateTime.Now).TotalSeconds;
@@ -182,7 +296,70 @@ namespace radar.ui.panel
             int minutes = Mathf.FloorToInt(countdownTime / 60);
             int seconds = Mathf.FloorToInt(countdownTime % 60);
             int milliseconds = Mathf.FloorToInt((countdownTime * 1000) % 1000);
-            InfoBarView.GameTime.Time.text = string.Format("{0:00}:{1:00}.{2:000}", minutes, seconds, milliseconds);
+            InfoBarView.GameTime.Time_.text = string.Format("{0:00}:{1:00}.{2:000}", minutes, seconds, milliseconds);
+        }
+        private void UpdateGameState(StateDatas state)
+        {
+            InfoBarView.GameTime.SetStateName(state.gameState_.GameStage);
+            InfoBarView.GameTime.SetRound(1, 3);
+            InfoBarView.EnemySide.SetEnemySide(state.gameState_.EnemySide);
+            foreach (var robot in InfoBarView.RobotStatus.RobotPrefabList_)
+            {
+                robot.Value.SetRobotHp(state.enemyRobots.Data[robot.Key].HP, state.gameState_.EnemySide);
+                robot.Value.SetRobotNumber((int)robot.Key, state.gameState_.EnemySide);
+                robot.Value.SetRobotName(robot.Key.ToString());
+                robot.Value.SetRobotState(state.enemyRobots.Data[robot.Key].IsTracked);
+            }
+        }
+
+        private void UpdateRobotPosition(StateDatas stateData)
+        {
+            if (robotList_ == null || robotList_.Count == 0)
+            {
+                robotList_ = new();
+                List<RobotType> unInstantiatedRobots = new List<RobotType>(){
+                        RobotType.Dart,
+                        RobotType.Drone,
+                        RobotType.Outpost,
+                        RobotType.Base
+                    };
+                foreach (var robotState in stateData.enemyRobots.Data)
+                {
+                    if (unInstantiatedRobots.Contains(robotState.Key)) continue;
+
+                    GameObject robot = Instantiate(robotPrefab_);
+                    robotPrefab_.name = robotState.Key.ToString();
+                    robot.transform.Find("Cylinder").GetComponent<Renderer>().material.color = robotState.Key == RobotType.Hero ? Color.blue : Color.red;
+                    if (robotState.Key == RobotType.Unkown)
+                        robot.transform.Find("Cylinder").GetComponent<Renderer>().material.color = Color.white;
+                    robot.GetComponentInChildren<TextMeshProUGUI>().text = robotState.Key.ToString();
+                    robotList_.Add(robotState.Key, robot);
+                }
+            }
+            foreach (var robotState in stateData.enemyRobots.Data)
+            {
+                Vector3 robotPosition;
+                if (!robotState.Value.IsTracked)
+                    robotPosition = new Vector3(0, minimap_.transform.position.y + 0.2f, 0);
+                else
+                    robotPosition = new Vector3(robotState.Value.Position.x, minimap_.transform.position.y + 0.2f, robotState.Value.Position.y);
+                robotList_[robotState.Key].transform.position = robotPosition;
+            }
+        }
+
+        public void OnDestroy()
+        {
+            if (!this.gameObject.scene.isLoaded) return;
+            if (DataManager.Instance != null)
+                DataManager.Instance.OnDataUpdated -= UpdateRobotPosition;
+            if (robotList_ != null)
+            {
+                foreach (var robot in robotList_)
+                {
+                    Destroy(robot.Value);
+                }
+                robotList_.Clear();
+            }
         }
     }
 }

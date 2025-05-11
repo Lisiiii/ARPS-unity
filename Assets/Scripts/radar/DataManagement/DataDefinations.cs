@@ -1,20 +1,95 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using radar.ui.panel;
 using UnityEngine;
 
 namespace radar.data
 {
-    public enum RobotType { Hero, Engineer, Infantry3, Infantry4, Infantry5, Sentry, Dart, Drone, Outpost, Base }
+    public enum RobotType { Unkown = -1, Hero = 0, Engineer = 1, Infantry3 = 2, Infantry4 = 3, Infantry5 = 4, Sentry = 5, Dart = 6, Drone = 7, Outpost = 8, Base = 9 }
+    public static class RobotName
+    {
+        public static readonly Dictionary<RobotType, string> Chinese = new Dictionary<RobotType, string>
+        {
+            { RobotType.Hero, "英雄机器人" },
+            { RobotType.Engineer, "工程机器人" },
+            { RobotType.Infantry3, "步兵机器人3" },
+            { RobotType.Infantry4, "步兵机器人4" },
+            { RobotType.Infantry5, "步兵机器人5" },
+            { RobotType.Sentry, "哨兵机器人" },
+            { RobotType.Dart, "飞镖" },
+            { RobotType.Drone, "无人机" },
+            { RobotType.Outpost, "前哨站" },
+            { RobotType.Base, "基地" }
+        };
+
+        public static readonly Dictionary<RobotType, string> English = new Dictionary<RobotType, string>
+        {
+            { RobotType.Hero, "Hero" },
+            { RobotType.Engineer, "Engineer" },
+            { RobotType.Infantry3, "Infantry3" },
+            { RobotType.Infantry4, "Infantry4" },
+            { RobotType.Infantry5, "Infantry5" },
+            { RobotType.Sentry, "Sentry" },
+            { RobotType.Dart, "Dart" },
+            { RobotType.Drone, "Drone" },
+            { RobotType.Outpost, "Outpost" },
+            { RobotType.Base, "Base" }
+        };
+    }
     public enum Team { Blue, Red }
     public enum GameStage { NotStarted, Preparing, Countdown, Started, Finished }
 
-    public class RobotState
+
+
+    public class Robot
     {
-        public bool IsTracked;
-        public Vector2 Position;
-        public DateTime LastUpdateTime;
-        public int HP;
+        public class RobotState
+        {
+            public bool IsTracked;
+            public Vector2 Position;
+            public DateTime LastUpdateTime;
+            public int HP;
+        }
+        public Dictionary<RobotType, RobotState> Data;
+        public Robot(List<RobotType> robotTypes = null)
+        {
+            Data = new Dictionary<RobotType, RobotState>();
+            if (robotTypes != null)
+            {
+                foreach (var robotType in robotTypes)
+                {
+                    Data.Add(robotType, new RobotState() { IsTracked = false, Position = Vector2.zero, LastUpdateTime = DateTime.Now, HP = 200 });
+                    switch (robotType)
+                    {
+                        case RobotType.Hero:
+                        case RobotType.Engineer:
+                        case RobotType.Infantry3:
+                        case RobotType.Infantry4:
+                        case RobotType.Infantry5:
+                        case RobotType.Sentry:
+                            Data[robotType].HP = 200;
+                            break;
+                        case RobotType.Dart:
+                            Data[robotType].HP = 10;
+                            break;
+                        case RobotType.Drone:
+                            Data[robotType].HP = 10;
+                            break;
+                        case RobotType.Outpost:
+                            Data[robotType].HP = 1500;
+                            break;
+                        case RobotType.Base:
+                            Data[robotType].HP = 2000; // Base HP
+                            break;
+                        default:
+                            Data[robotType].HP = 200; // Unknown type
+                            break;
+                    }
+                }
+            }
+        }
+
     }
     public class GameState
     {
@@ -25,25 +100,18 @@ namespace radar.data
     }
     public class StateDatas
     {
-        public Dictionary<RobotType, RobotState> enemyRobotStates_;
-        public Dictionary<RobotType, RobotState> allieRobotStates_;
+        public Robot enemyRobots;
+        public Robot allieRobots;
+        public Robot enemyFacilities;
+        public Robot allieFacilities;
         public GameState gameState_;
         public StateDatas()
         {
-            enemyRobotStates_ = new Dictionary<RobotType, RobotState>{
-                { RobotType.Hero, new RobotState() { IsTracked = false,Position = Vector2.zero,LastUpdateTime = DateTime.Now,HP = 200}},
-                { RobotType.Engineer, new RobotState() { IsTracked = false, Position = Vector2.zero, LastUpdateTime = DateTime.Now, HP = 200}},
-                { RobotType.Infantry3, new RobotState() { IsTracked = false, Position = Vector2.zero, LastUpdateTime = DateTime.Now, HP = 200}},
-                { RobotType.Infantry4, new RobotState() { IsTracked = false, Position = Vector2.zero, LastUpdateTime = DateTime.Now, HP = 200}},
-                { RobotType.Infantry5, new RobotState() { IsTracked = false, Position = Vector2.zero, LastUpdateTime = DateTime.Now, HP = 200}},
-                { RobotType.Sentry, new RobotState() { IsTracked = false, Position = Vector2.zero, LastUpdateTime = DateTime.Now, HP = 600}},
-                { RobotType.Dart, new RobotState() { IsTracked = false, Position = Vector2.zero, LastUpdateTime = DateTime.Now, HP = -1}},
-                { RobotType.Drone, new RobotState() { IsTracked = false, Position = Vector2.zero, LastUpdateTime = DateTime.Now, HP = -1}},
-                { RobotType.Outpost, new RobotState() { IsTracked = false, Position = Vector2.zero, LastUpdateTime = DateTime.Now, HP = 1500}},
-                { RobotType.Base, new RobotState() { IsTracked = false, Position = Vector2.zero, LastUpdateTime = DateTime.Now, HP = 2000}},
-            };
-            allieRobotStates_ = enemyRobotStates_;
-            gameState_ = new GameState { GameStage = GameStage.NotStarted, GameTimeSeconds = 0, GameCount = 0, EnemySide = Team.Red };
+            enemyRobots = new Robot(new List<RobotType> { RobotType.Hero, RobotType.Engineer, RobotType.Infantry3, RobotType.Infantry4, RobotType.Infantry5, RobotType.Sentry, RobotType.Unkown });
+            allieRobots = new Robot(new List<RobotType> { RobotType.Hero, RobotType.Engineer, RobotType.Infantry3, RobotType.Infantry4, RobotType.Infantry5, RobotType.Sentry, RobotType.Unkown });
+            enemyFacilities = new Robot(new List<RobotType> { RobotType.Dart, RobotType.Drone, RobotType.Outpost, RobotType.Base });
+            allieFacilities = new Robot(new List<RobotType> { RobotType.Dart, RobotType.Drone, RobotType.Outpost, RobotType.Base });
+            gameState_ = new GameState { GameStage = GameStage.NotStarted, GameTimeSeconds = 0, GameCount = 0, EnemySide = Team.Blue };
         }
     }
 }

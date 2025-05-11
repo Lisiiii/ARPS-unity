@@ -3,6 +3,7 @@ using Unity.Sentis;
 using System.Collections.Generic;
 using radar.utils;
 using System;
+using UnityEngine.UI;
 
 namespace radar.Yolov8
 {
@@ -13,15 +14,18 @@ namespace radar.Yolov8
         Worker worker_;
         private bool inferencePending_ = false;
         private Tensor<float> outputTensor_;
-        public int classCount_; // Number of classes in model
-        public Yolov8Inferencer(ModelAsset inferenceModel)
+        private int classCount_; // Number of classes in model
+        private Texture2D inputTexture_ = new Texture2D(1920, 1080, TextureFormat.RGB24, false);
+        public Yolov8Inferencer(ModelAsset inferenceModel, int classCount = 1)
         {
+            classCount_ = classCount;
             worker_ = new Worker(ModelLoader.Load(inferenceModel), BackendType.GPUCompute);
         }
 
         // Asynchronously run inference on the input texture,if the inference is done, return the result,or return null.
         public Dictionary<int, List<BoundingBox>> inference(Texture2D inputTexture, float confidenceThreshold, float nmsThreshold)
         {
+            inputTexture_ = inputTexture;
             if (!inferencePending_)
             {
                 using Tensor<float> inputTensor = TextureConverter.ToTensor(inputTexture, width: 640, height: 640);
@@ -36,13 +40,12 @@ namespace radar.Yolov8
             {
                 inferencePending_ = false;
                 var cpuTensorArray = outputTensor_.DownloadToArray();
-
                 Dictionary<int, List<BoundingBox>> results = postProcess(cpuTensorArray, classCount_, confidenceThreshold, nmsThreshold);
-
                 outputTensor_.Dispose();
                 return results;
             }
             return null;
+
         }
 
 
@@ -55,7 +58,7 @@ namespace radar.Yolov8
 
             for (int i = 0; i < 8400; i++)
             {
-                for (int classIndex = 4; classIndex < classCount; classIndex++)
+                for (int classIndex = 4; classIndex < classCount + 4; classIndex++)
                 {
                     // float confidence = cpuTensor[0, classIndex, i];
                     float confidence = cpuTensorArray[classIndex * 8400 + i];
@@ -75,6 +78,12 @@ namespace radar.Yolov8
                         {
                             classBoundingBoxes[classIndex - 4] = new List<BoundingBox>();
                         }
+                        xMin = (int)Mathf.Clamp(xMin * (inputTexture_.width / 640f), 0, inputTexture_.width - 1);
+                        xMax = (int)Mathf.Clamp(xMax * (inputTexture_.width / 640f), 0, inputTexture_.width - 1);
+                        yMin = (int)Mathf.Clamp(yMin * (inputTexture_.height / 640f), 0, inputTexture_.height - 1);
+                        yMax = (int)Mathf.Clamp(yMax * (inputTexture_.height / 640f), 0, inputTexture_.height - 1);
+
+
 
                         classBoundingBoxes[classIndex - 4].Add(new BoundingBox
                         {

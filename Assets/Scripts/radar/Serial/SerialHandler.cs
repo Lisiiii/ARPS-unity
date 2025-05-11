@@ -88,6 +88,9 @@ namespace radar.serial
 
         public void SendData(int commandId, byte[] data)
         {
+            if (current_sp_ == null || !current_sp_.IsOpen)
+                return;
+
             byte[] dataToSend = packageData(commandId, data);
             try
             {
