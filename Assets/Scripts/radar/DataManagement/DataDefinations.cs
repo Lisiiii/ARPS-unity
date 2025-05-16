@@ -38,8 +38,19 @@ namespace radar.data
         };
     }
     public enum Team { Blue, Red }
-    public enum GameStage { NotStarted, Preparing, Countdown, Started, Finished }
+    public enum GameStage { NotStarted = 0, Preparing = 1, Countdown = 2, Started = 3, Finished = 4 }
 
+    public static class StageName
+    {
+        public static readonly Dictionary<GameStage, string> Chinese = new Dictionary<GameStage, string>
+        {
+            { GameStage.NotStarted, "未开始" },
+            { GameStage.Preparing, "准备中" },
+            { GameStage.Countdown, "倒计时" },
+            { GameStage.Started, "进行中" },
+            { GameStage.Finished, "已结束" }
+        };
+    }
 
 
     public class Robot

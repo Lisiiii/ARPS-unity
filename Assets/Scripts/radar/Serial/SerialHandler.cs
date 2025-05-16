@@ -5,7 +5,6 @@ using System.IO.Ports;
 using System.Threading;
 using UnityEngine;
 using radar.data;
-using Unity.Android.Gradle.Manifest;
 using System.Runtime.InteropServices;
 using radar.serial.crc;
 using radar.serial.package;

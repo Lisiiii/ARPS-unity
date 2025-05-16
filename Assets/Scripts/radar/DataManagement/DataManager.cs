@@ -14,23 +14,23 @@ public class DataManager : MonoBehaviour
     {
         get
         {
-            if (_instance == null)
+            if (instance_ == null)
             {
-                _instance = FindAnyObjectByType<DataManager>();
-                if (_instance == null)
+                instance_ = FindAnyObjectByType<DataManager>();
+                if (instance_ == null)
                 {
                     GameObject obj = new GameObject("DataManager");
-                    _instance = obj.AddComponent<DataManager>();
+                    instance_ = obj.AddComponent<DataManager>();
                 }
             }
-            return _instance;
+            return instance_;
         }
     }
     public ConcurrentQueue<StateDatas> updatedStateQueue = new ConcurrentQueue<StateDatas>();
     public event Action<StateDatas> OnDataUpdated;
     public ref StateDatas stateData => ref stateData_;    // Read-only property to access the state data
     public float sendFrequencyHz = 10f;
-    private static DataManager _instance;
+    private static DataManager instance_;
     private StateDatas stateData_ = new();
     private bool isDataUpdated_ = false;
     public void Start()
@@ -80,7 +80,7 @@ public class DataManager : MonoBehaviour
             if (DateTime.Now - robotState.Value.LastUpdateTime > TimeSpan.FromSeconds(2))
             {
                 robotState.Value.IsTracked = false;
-                robotState.Value.Position = Vector2.zero;
+                robotState.Value.Position = new Vector2(11.25f, 5.3f);
                 isDataUpdated_ = true;
             }
 
@@ -114,6 +114,6 @@ public class DataManager : MonoBehaviour
     }
     private void OnDestroy()
     {
-        _instance = null;
+        instance_ = null;
     }
 }

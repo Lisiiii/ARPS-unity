@@ -1,5 +1,5 @@
 using UnityEngine;
-using Unity.Sentis;
+
 using UnityEngine.UI;
 using System.Collections.Generic;
 using radar.Yolov8;
@@ -23,8 +23,8 @@ namespace radar.detector
     }
     public class Detector : MonoBehaviour
     {
-        public ModelAsset robotModelAsset_;
-        public ModelAsset armorModelAsset_;
+        public Unity.InferenceEngine.ModelAsset robotModelAsset_;
+        public Unity.InferenceEngine.ModelAsset armorModelAsset_;
         public int robotClassCount_ = 1;
         public int armorClassCount_ = 12;
         public RenderTexture inputTexture_;
@@ -44,8 +44,6 @@ namespace radar.detector
             armorInferencer_ = new Yolov8Inferencer(armorModelAsset_, armorClassCount_);
             rawTexture_ = new Texture2D(inputTexture_.width, inputTexture_.height, TextureFormat.RGB24, false);
             inferenceResults_ = new Dictionary<int, List<BoundingBox>>();
-
-
         }
 
         void Update()
@@ -83,7 +81,7 @@ namespace radar.detector
                 robotResults = null;
                 while (robotResults == null)
                 {
-                    robotResults = robotInferencer_.inference(rawTexture_, 0.05f, 0.2f);
+                    robotResults = robotInferencer_.inference(rawTexture_, 0.1f, 0.2f);
                     yield return null;
                 }
                 if (robotResults.Count == 0)
@@ -92,21 +90,28 @@ namespace radar.detector
                     continue;
                 }
 
+
                 foreach (var robotBox in robotResults[0])
                 {
-                    Debug.Log($"Count: {robotResults[0].Count} Robot Confidence: {robotBox.Confidence}");
-                    Vector2Int boxOrigin = new Vector2Int((int)robotBox.XMin, (int)robotBox.YMax);
+
+                    Vector2Int boxOrigin = new Vector2Int((int)robotBox.XMin, (int)robotBox.YMin);
                     Vector2Int boxSize = new Vector2Int((int)(robotBox.XMax - robotBox.XMin), (int)(robotBox.YMax - robotBox.YMin));
+                    boxOrigin.x = Mathf.Clamp(boxOrigin.x, 0, rawTexture_.width - 1);
+                    boxOrigin.y = Mathf.Clamp(boxOrigin.y, 0, rawTexture_.height - 1);
+                    boxSize.x = Mathf.Clamp(boxSize.x, 0, rawTexture_.width - boxOrigin.x - 1);
+                    boxSize.y = Mathf.Clamp(boxSize.y, 0, rawTexture_.height - boxOrigin.y - 1);
+
 
                     Color[] m_Colors = rawTexture_.GetPixels(boxOrigin.x, boxOrigin.y, boxSize.x, boxSize.y);
                     Texture2D clipedTexture = new Texture2D(boxSize.x, boxSize.y, TextureFormat.RGB24, false);
                     clipedTexture.SetPixels(m_Colors);
                     clipedTexture.Apply();
 
+
                     armorResults = null;
                     while (armorResults == null)
                     {
-                        armorResults = armorInferencer_.inference(clipedTexture, 0.05f, 0.2f);
+                        armorResults = armorInferencer_.inference(clipedTexture, 0.1f, 0.2f);
                         yield return null;
                     }
                     Vector2 robotType = new Vector2(-1, 0);
@@ -150,6 +155,9 @@ namespace radar.detector
         {
             if (inferenceResults.Count == 0) return;
             // 0-5 for blue, 6-11 for red
+            Vector2Int classScale =
+                DataManager.Instance.stateData.gameState_.EnemySide == Team.Blue ? new Vector2Int(0, 5) : new Vector2Int(6, 11);
+
             foreach (var kvp in inferenceResults)
             {
                 int classIndex = kvp.Key;
@@ -168,15 +176,28 @@ namespace radar.detector
                         Vector2 robotCoordinate = new(hit.point.x, hit.point.z);
                         RobotType robotType = (RobotType)(classIndex > 5 ? classIndex - 6 : classIndex);
                         RobotCoordinatePair newPair = new(robotCoordinate, robotType);
-                        DataManager.Instance.UploadData(newPair, UpdateRobotPositions);
+                        if (classIndex >= classScale.x && classIndex <= classScale.y)
+                            DataManager.Instance.UploadData(newPair, UpdateEnemyRobotPositions);
+                        else
+                            DataManager.Instance.UploadData(newPair, UpdateAllieRobotPositions);
+
+                        Debug.DrawLine(ray.origin, hit.point, Color.red, 1f);
                     }
                 }
             }
         }
 
-        public void UpdateRobotPositions(RobotCoordinatePair updateRobotPositions)
+        public void UpdateEnemyRobotPositions(RobotCoordinatePair updateRobotPositions)
         {
             Robot robot = DataManager.Instance.stateData.enemyRobots;
+            robot.Data[updateRobotPositions.robotType_].Position = updateRobotPositions.robotCoordinate_;
+            robot.Data[updateRobotPositions.robotType_].IsTracked = true;
+            robot.Data[updateRobotPositions.robotType_].LastUpdateTime = DateTime.Now;
+        }
+
+        public void UpdateAllieRobotPositions(RobotCoordinatePair updateRobotPositions)
+        {
+            Robot robot = DataManager.Instance.stateData.allieRobots;
             robot.Data[updateRobotPositions.robotType_].Position = updateRobotPositions.robotCoordinate_;
             robot.Data[updateRobotPositions.robotType_].IsTracked = true;
             robot.Data[updateRobotPositions.robotType_].LastUpdateTime = DateTime.Now;
@@ -187,6 +208,8 @@ namespace radar.detector
         {
             if (robotInferencer_ != null)
                 robotInferencer_.Dispose();
+            if (armorInferencer_ != null)
+                armorInferencer_.Dispose();
         }
     }
 

@@ -19,38 +19,51 @@ namespace radar.ui.panel
         public Transform GameTimeRoot_;
         public TextMeshProUGUI StateName_;
         public TextMeshProUGUI Time_;
-        public TextMeshProUGUI Round_;
+        public Button RoundButton_;
+        public Button ResetButton_;
         public GameTimeType(Transform GameTimeRoot)
         {
             GameTimeRoot_ = GameTimeRoot;
             StateName_ = GameTimeRoot.Find("StateName").GetComponent<TextMeshProUGUI>();
             Time_ = GameTimeRoot.Find("Time").GetComponent<TextMeshProUGUI>();
-            Round_ = GameTimeRoot.Find("Round").GetComponent<TextMeshProUGUI>();
+            RoundButton_ = GameTimeRoot.Find("RoundButton").GetComponent<Button>();
+            ResetButton_ = GameTimeRoot.Find("ResetButton").GetComponent<Button>();
+
+            RoundButton_.onClick.AddListener(() =>
+            {
+                DataManager.Instance.UploadData(
+                    ((int)DataManager.Instance.stateData.gameState_.GameStage + 1) % 5,
+                    (stage) =>
+                    {
+                        DataManager.Instance.stateData.gameState_.GameStage = (GameStage)stage;
+                    });
+            });
         }
         public void SetStateName(GameStage stage)
         {
+            StateName_.text = StageName.Chinese[stage];
             switch (stage)
             {
                 case GameStage.NotStarted:
-                    StateName_.text = "未开始";
+                    StateName_.color = Color.white;
                     break;
                 case GameStage.Preparing:
-                    StateName_.text = "准备中";
+                    StateName_.color = Color.yellow;
                     break;
                 case GameStage.Countdown:
-                    StateName_.text = "倒计时";
+                    StateName_.color = Color.red;
                     break;
                 case GameStage.Started:
-                    StateName_.text = "进行中";
+                    StateName_.color = Color.blue;
                     break;
                 case GameStage.Finished:
-                    StateName_.text = "已结束";
+                    StateName_.color = Color.gray;
                     break;
             }
         }
         public void SetRound(int round, int bo = 3)
         {
-            Round_.text = "回合" + round.ToString() + "  /  " + bo.ToString();
+            RoundButton_.transform.GetComponentInChildren<TextMeshProUGUI>().text = "Round  " + round.ToString() + "/" + bo.ToString();
         }
         public void SetTime(string time)
         {
@@ -155,15 +168,16 @@ namespace radar.ui.panel
         {
             TerminalBarRoot = terminalBarRoot;
             TerminalText = terminalBarRoot.Find("Background/Info").GetComponent<TextMeshProUGUI>();
+
+            // Using ui to display log will consume too many compute resources
+            // LogManager.Instance.onLogUpdated_ += SetTerminalContent;
+
         }
-        public void SetTerminalText(string text)
+        public void SetTerminalContent(string text)
         {
             TerminalText.text = text;
         }
-        public void SetTerminalTextColor(Color color)
-        {
-            TerminalText.color = color;
-        }
+
     }
     #region INFOBAR_VIEW
     public class InfoBarViewType
@@ -295,12 +309,14 @@ namespace radar.ui.panel
 
             int minutes = Mathf.FloorToInt(countdownTime / 60);
             int seconds = Mathf.FloorToInt(countdownTime % 60);
-            int milliseconds = Mathf.FloorToInt((countdownTime * 1000) % 1000);
+            int milliseconds = Mathf.FloorToInt(countdownTime * 1000 % 1000);
             InfoBarView.GameTime.Time_.text = string.Format("{0:00}:{1:00}.{2:000}", minutes, seconds, milliseconds);
         }
         private void UpdateGameState(StateDatas state)
         {
             InfoBarView.GameTime.SetStateName(state.gameState_.GameStage);
+            initialTime = DateTime.Now.AddMinutes(7);
+
             InfoBarView.GameTime.SetRound(1, 3);
             InfoBarView.EnemySide.SetEnemySide(state.gameState_.EnemySide);
             foreach (var robot in InfoBarView.RobotStatus.RobotPrefabList_)
@@ -329,9 +345,9 @@ namespace radar.ui.panel
 
                     GameObject robot = Instantiate(robotPrefab_);
                     robotPrefab_.name = robotState.Key.ToString();
-                    robot.transform.Find("Cylinder").GetComponent<Renderer>().material.color = robotState.Key == RobotType.Hero ? Color.blue : Color.red;
+                    robot.transform.Find("Cylinder").GetComponent<Renderer>().material.color = stateData.gameState_.EnemySide == Team.Blue ? Color.blue : Color.red;
                     if (robotState.Key == RobotType.Unkown)
-                        robot.transform.Find("Cylinder").GetComponent<Renderer>().material.color = Color.white;
+                        robot.transform.Find("Cylinder").GetComponent<Renderer>().material.color = Color.gray;
                     robot.GetComponentInChildren<TextMeshProUGUI>().text = robotState.Key.ToString();
                     robotList_.Add(robotState.Key, robot);
                 }
@@ -344,6 +360,7 @@ namespace radar.ui.panel
                 else
                     robotPosition = new Vector3(robotState.Value.Position.x, minimap_.transform.position.y + 0.2f, robotState.Value.Position.y);
                 robotList_[robotState.Key].transform.position = robotPosition;
+                robotList_[robotState.Key].transform.Find("Cylinder").GetComponent<Renderer>().material.color = stateData.gameState_.EnemySide == Team.Blue ? Color.blue : Color.red;
             }
         }
 
