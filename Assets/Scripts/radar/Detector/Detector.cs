@@ -166,7 +166,7 @@ namespace radar.detector
             if (inferenceResults.Count == 0) return;
             // 0-5 for blue, 6-11 for red
             Vector2Int classScale =
-                DataManager.Instance.stateData.gameState_.EnemySide == Team.Blue ? new Vector2Int(0, 5) : new Vector2Int(6, 11);
+                DataManager.Instance.stateData.gameState.EnemySide == Team.Blue ? new Vector2Int(0, 5) : new Vector2Int(6, 11);
 
             foreach (var kvp in inferenceResults)
             {

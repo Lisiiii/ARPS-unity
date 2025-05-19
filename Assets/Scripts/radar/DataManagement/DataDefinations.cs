@@ -38,7 +38,7 @@ namespace radar.data
         };
     }
     public enum Team { Blue, Red }
-    public enum GameStage { NotStarted = 0, Preparing = 1, Countdown = 2, Started = 3, Finished = 4 }
+    public enum GameStage { NotStarted = 0, Preparing = 1, SelfCheck = 2, Countdown = 3, Started = 4, Finished = 5 }
 
     public static class StageName
     {
@@ -46,6 +46,7 @@ namespace radar.data
         {
             { GameStage.NotStarted, "未开始" },
             { GameStage.Preparing, "准备中" },
+            { GameStage.SelfCheck, "自检中" },
             { GameStage.Countdown, "倒计时" },
             { GameStage.Started, "进行中" },
             { GameStage.Finished, "已结束" }
@@ -109,20 +110,27 @@ namespace radar.data
         public int GameCount;
         public Team EnemySide;
     }
+    public class RadarInfo
+    {
+        public int DoubleDebuffChances;
+        public bool IsDoubleDebuffAble;
+    }
     public class StateDatas
     {
         public Robot enemyRobots;
         public Robot allieRobots;
         public Robot enemyFacilities;
         public Robot allieFacilities;
-        public GameState gameState_;
+        public RadarInfo radarInfo;
+        public GameState gameState;
         public StateDatas()
         {
             enemyRobots = new Robot(new List<RobotType> { RobotType.Hero, RobotType.Engineer, RobotType.Infantry3, RobotType.Infantry4, RobotType.Infantry5, RobotType.Sentry, RobotType.Unkown });
             allieRobots = new Robot(new List<RobotType> { RobotType.Hero, RobotType.Engineer, RobotType.Infantry3, RobotType.Infantry4, RobotType.Infantry5, RobotType.Sentry, RobotType.Unkown });
             enemyFacilities = new Robot(new List<RobotType> { RobotType.Dart, RobotType.Drone, RobotType.Outpost, RobotType.Base });
             allieFacilities = new Robot(new List<RobotType> { RobotType.Dart, RobotType.Drone, RobotType.Outpost, RobotType.Base });
-            gameState_ = new GameState { GameStage = GameStage.NotStarted, GameTimeSeconds = 0, GameCount = 0, EnemySide = Team.Blue };
+            gameState = new GameState { GameStage = GameStage.NotStarted, GameTimeSeconds = 0, GameCount = 0, EnemySide = Team.Blue };
+            radarInfo = new RadarInfo { DoubleDebuffChances = 0, IsDoubleDebuffAble = false };
         }
     }
 }

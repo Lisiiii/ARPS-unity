@@ -1,3 +1,5 @@
+using radar.data;
+
 namespace radar.serial.package
 {
     public static class Constants
@@ -37,8 +39,8 @@ namespace radar.serial.package
         public ushort StageRemainTime;
         public ulong SyncTimestamp;
 
-        public byte GameType => (byte)(GameTypeAndStage & 0x0F);
-        public byte GameStage => (byte)((GameTypeAndStage >> 4) & 0x0F);
+        public int GameType => GameTypeAndStage & 0x0F;
+        public GameStage Stage => (GameStage)((GameTypeAndStage >> 4) & 0x0F);
     }
 
     [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, Pack = 1)]
@@ -154,6 +156,14 @@ namespace radar.serial.package
         public ushort Infantry5PositionY;
         public ushort SentryPositionX;
         public ushort SentryPositionY;
+    }
+    [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential, Pack = 1)]
+    public struct RobotInteraction_Radar
+    {
+        public ushort dataCmdId;
+        public ushort senderId;
+        public ushort receiverId;
+        public byte data;
     }
 
 }

@@ -36,6 +36,10 @@ namespace radar.data
         private static DataManager instance_;
         private StateDatas stateData_ = new();
         private bool isDataUpdated_ = false;
+        private int doubleDebuffActivedTimes = 0;
+
+        public DateTime lastRecordTime = DateTime.Now;
+        public int lastRecordTimeSeconds = 0;
         public void Start()
         {
         }
@@ -53,7 +57,10 @@ namespace radar.data
 
             // Send data at the specified frequency
             if (Time.frameCount % Mathf.RoundToInt(60f / sendFrequencyHz) == 0)
-                SendData();
+                SendRobotPositionData();
+
+            if (stateData_.radarInfo.DoubleDebuffChances > 0)
+                SendDoubleDebuffCmd();
         }
 
         public void UploadData<T>(T data, Action<T> updateAction)
@@ -76,6 +83,11 @@ namespace radar.data
 
         private void UpdateData()
         {
+            TimeSpan timeSinceLastUpdate = DateTime.Now - lastRecordTime;
+            stateData_.gameState.GameTimeSeconds = lastRecordTimeSeconds - (int)timeSinceLastUpdate.TotalSeconds;
+            if (stateData_.gameState.GameTimeSeconds < 0)
+                stateData_.gameState.GameTimeSeconds = 0;
+
             foreach (var robotState in stateData_.enemyRobots.Data)
             {
                 if (!robotState.Value.IsTracked) continue;
@@ -91,7 +103,40 @@ namespace radar.data
             }
         }
 
-        private void SendData()
+        private void SendDoubleDebuffCmd()
+        {
+            if (!SerialHandler.Instance.isConnected) return;
+            if (stateData_.radarInfo.IsDoubleDebuffAble) return;
+            if (doubleDebuffActivedTimes >= 2)
+            {
+                doubleDebuffActivedTimes = 0;
+                return;
+            }
+            doubleDebuffActivedTimes++;
+
+            RobotInteraction_Radar robotInteractionData = new RobotInteraction_Radar
+            {
+                dataCmdId = 0x0121,
+                senderId = (ushort)(Instance.stateData.gameState.EnemySide == Team.Blue ? 9 : 109),
+                receiverId = 0x8080,
+                data = (byte)doubleDebuffActivedTimes
+            };
+
+
+            byte[] dataToSend = new byte[Marshal.SizeOf(typeof(RobotInteraction_Radar))];
+            IntPtr ptr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(RobotInteraction_Radar)));
+            Marshal.StructureToPtr(robotInteractionData, ptr, true);
+            Marshal.Copy(ptr, dataToSend, 0, Marshal.SizeOf(typeof(RobotInteraction_Radar)));
+            Marshal.FreeHGlobal(ptr);
+
+            Debug.Log($"[DataManager]Send byte data to send: {BitConverter.ToString(dataToSend)}");
+
+            SerialHandler.Instance.SendData(0x0301, dataToSend);
+
+            LogManager.Instance.log($"[DataManager]Send double debuff command:{doubleDebuffActivedTimes}");
+        }
+
+        private void SendRobotPositionData()
         {
             if (!SerialHandler.Instance.isConnected) return;
 
@@ -99,7 +144,7 @@ namespace radar.data
             foreach (var robot in stateData_.enemyRobots.Data)
             {
                 Vector2 location =
-                          stateData.gameState_.EnemySide == Team.Blue
+                          stateData.gameState.EnemySide == Team.Blue
                               ? new Vector2(robot.Value.Position.x + 14f, robot.Value.Position.y + 7.5f)
                               : new Vector2(28f - (robot.Value.Position.x + 14f), 15f - (robot.Value.Position.y + 7.5f));
                 // 2025赛季更改了地图坐标单位,现为cm,这里 m -> cm
@@ -129,7 +174,7 @@ namespace radar.data
             Marshal.Copy(ptr, dataToSend, 0, Marshal.SizeOf(typeof(MapRobotData)));
             Marshal.FreeHGlobal(ptr);
 
-            serial.SerialHandler.Instance.SendData(0x0305, dataToSend);
+            SerialHandler.Instance.SendData(0x0305, dataToSend);
 
             LogManager.Instance.log("[DataManager]Send data: {" +
                 $"Hero: ({mapDataToSend.HeroPositionX}, {mapDataToSend.HeroPositionY}), " +

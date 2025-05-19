@@ -705,7 +705,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e920ec3bbb773143b2729ff5244dd6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sendFrequencyHz: 10
+  sendFrequencyHz: 6
+  lastRecordTimeSeconds: 0
 --- !u!4 &323380599
 Transform:
   m_ObjectHideFlags: 0

@@ -103,8 +103,8 @@ namespace radar.serial.crc
         {
             if (data.Length < 2) return;
             ushort checksum = CalculateCrc16(data[..^2]);
-            data[^2] = (byte)(checksum >> 8);
-            data[^1] = (byte)(checksum & 0xff);
+            data[^1] = (byte)(checksum >> 8);
+            data[^2] = (byte)(checksum & 0xff);
         }
     }
 }

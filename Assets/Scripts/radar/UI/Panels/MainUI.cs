@@ -32,10 +32,10 @@ namespace radar.ui.panel
             RoundButton_.onClick.AddListener(() =>
             {
                 DataManager.Instance.UploadData(
-                    ((int)DataManager.Instance.stateData.gameState_.GameStage + 1) % 5,
+                    ((int)DataManager.Instance.stateData.gameState.GameStage + 1) % 5,
                     (stage) =>
                     {
-                        DataManager.Instance.stateData.gameState_.GameStage = (GameStage)stage;
+                        DataManager.Instance.stateData.gameState.GameStage = (GameStage)stage;
                     });
             });
         }
@@ -50,14 +50,17 @@ namespace radar.ui.panel
                 case GameStage.Preparing:
                     StateName_.color = Color.yellow;
                     break;
+                case GameStage.SelfCheck:
+                    StateName_.color = new Color(1, 140f / 255f, 0);
+                    break;
                 case GameStage.Countdown:
                     StateName_.color = Color.red;
                     break;
                 case GameStage.Started:
-                    StateName_.color = Color.blue;
+                    StateName_.color = new Color(0, 1, 1);
                     break;
                 case GameStage.Finished:
-                    StateName_.color = Color.gray;
+                    StateName_.color = Color.black;
                     break;
             }
         }
@@ -89,10 +92,10 @@ namespace radar.ui.panel
             SwitchButton_.onClick.AddListener(() =>
             {
                 DataManager.Instance.UploadData(
-                    DataManager.Instance.stateData.gameState_.EnemySide == Team.Blue ? Team.Red : Team.Blue,
+                    DataManager.Instance.stateData.gameState.EnemySide == Team.Blue ? Team.Red : Team.Blue,
                     (team) =>
                     {
-                        DataManager.Instance.stateData.gameState_.EnemySide = team;
+                        DataManager.Instance.stateData.gameState.EnemySide = team;
                     });
             });
         }
@@ -149,10 +152,10 @@ namespace radar.ui.panel
             }
             public void SetRobotHp(float hp, Team team)
             {
-                RobotHp.maxValue = 200;
+                RobotHp.maxValue = hp;
                 RobotHp.minValue = 0;
                 RobotHp.value = hp;
-                RobotHp.gameObject.transform.Find("HPText").GetComponent<TextMeshProUGUI>().text = hp.ToString() + "/200";
+                RobotHp.gameObject.transform.Find("HPText").GetComponent<TextMeshProUGUI>().text = hp.ToString() + "/" + RobotHp.maxValue.ToString();
                 RobotHp.gameObject.transform.Find("Fill Area/Fill").GetComponent<Image>().color = team == Team.Blue ? Color.blue : Color.red;
             }
 
@@ -293,19 +296,19 @@ namespace radar.ui.panel
 
             DataManager.Instance.OnDataUpdated += UpdateRobotPosition;
             DataManager.Instance.OnDataUpdated += UpdateGameState;
+            DataManager.Instance.OnDataUpdated += UpdateGameTime;
         }
         public override void Update()
         {
-            UpdateGameTime();
+            // UpdateGameTime();
         }
 
-        private void UpdateGameTime()
+        private void UpdateGameTime(StateDatas stateDatas)
         {
-            countdownTime = (float)(initialTime - System.DateTime.Now).TotalSeconds;
+            // countdownTime = (float)(initialTime - System.DateTime.Now).TotalSeconds;
+            countdownTime = stateDatas.gameState.GameTimeSeconds;
             if (countdownTime < 0)
-            {
                 countdownTime = 0;
-            }
 
             int minutes = Mathf.FloorToInt(countdownTime / 60);
             int seconds = Mathf.FloorToInt(countdownTime % 60);
@@ -314,15 +317,15 @@ namespace radar.ui.panel
         }
         private void UpdateGameState(StateDatas state)
         {
-            InfoBarView.GameTime.SetStateName(state.gameState_.GameStage);
+            InfoBarView.GameTime.SetStateName(state.gameState.GameStage);
             // initialTime = DateTime.Now.AddMinutes(7);
 
             InfoBarView.GameTime.SetRound(1, 3);
-            InfoBarView.EnemySide.SetEnemySide(state.gameState_.EnemySide);
+            InfoBarView.EnemySide.SetEnemySide(state.gameState.EnemySide);
             foreach (var robot in InfoBarView.RobotStatus.RobotPrefabList_)
             {
-                robot.Value.SetRobotHp(state.enemyRobots.Data[robot.Key].HP, state.gameState_.EnemySide);
-                robot.Value.SetRobotNumber((int)robot.Key, state.gameState_.EnemySide);
+                robot.Value.SetRobotHp(state.enemyRobots.Data[robot.Key].HP, state.gameState.EnemySide);
+                robot.Value.SetRobotNumber((int)robot.Key, state.gameState.EnemySide);
                 robot.Value.SetRobotName(robot.Key.ToString());
                 robot.Value.SetRobotState(state.enemyRobots.Data[robot.Key].IsTracked);
             }
@@ -345,7 +348,7 @@ namespace radar.ui.panel
 
                     GameObject robot = Instantiate(robotPrefab_);
                     robotPrefab_.name = robotState.Key.ToString();
-                    robot.transform.Find("Cylinder").GetComponent<Renderer>().material.color = stateData.gameState_.EnemySide == Team.Blue ? Color.blue : Color.red;
+                    robot.transform.Find("Cylinder").GetComponent<Renderer>().material.color = stateData.gameState.EnemySide == Team.Blue ? Color.blue : Color.red;
                     if (robotState.Key == RobotType.Unkown)
                         robot.transform.Find("Cylinder").GetComponent<Renderer>().material.color = Color.gray;
                     robot.GetComponentInChildren<TextMeshProUGUI>().text = robotState.Key.ToString();
@@ -360,7 +363,7 @@ namespace radar.ui.panel
                 else
                     robotPosition = new Vector3(robotState.Value.Position.x, minimap_.transform.position.y + 0.2f, robotState.Value.Position.y);
                 robotList_[robotState.Key].transform.position = robotPosition;
-                robotList_[robotState.Key].transform.Find("Cylinder").GetComponent<Renderer>().material.color = stateData.gameState_.EnemySide == Team.Blue ? Color.blue : Color.red;
+                robotList_[robotState.Key].transform.Find("Cylinder").GetComponent<Renderer>().material.color = stateData.gameState.EnemySide == Team.Blue ? Color.blue : Color.red;
             }
         }
 

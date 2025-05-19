@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using radar.serial.crc;
 using radar.serial.package;
 using System.Linq;
+using Unity.VisualScripting;
 
 namespace radar.serial
 {
@@ -91,12 +92,14 @@ namespace radar.serial
             }
         }
 
-        public void SendData(int commandId, byte[] data)
+        public void SendData(ushort commandId, byte[] data)
         {
             if (current_sp_ == null || !current_sp_.IsOpen)
                 return;
 
             byte[] dataToSend = packageData(commandId, data);
+            Debug.Log($"[SerialHandler]SendData: {commandId:X4} - {BitConverter.ToString(dataToSend).Replace("-", " ")}");
+
             try
             {
                 if (current_sp_.IsOpen)
@@ -115,9 +118,34 @@ namespace radar.serial
             }
         }
 
-        private bool readBytesUntilFilled(List<byte> bufferList, int count)
+        private bool readBytesUntilFilled(List<byte> bufferList, int count, bool isReadingHead = false)
         {
             if (current_sp_ == null || !current_sp_.IsOpen) return false;
+
+            if (isReadingHead)
+            {
+                while (true)
+                {
+                    if (current_sp_.BytesToRead == 0) { Thread.Sleep(1); continue; }
+                    byte[] buffer = new byte[current_sp_.BytesToRead];
+                    try
+                    {
+                        current_sp_.Read(buffer, 0, buffer.Length);
+                    }
+                    catch (Exception ex)
+                    {
+                        LogManager.Instance.error("[SerialHandler]" + ex.ToString());
+                        return false;
+                    }
+                    if (buffer[0] != 0xA5)
+                        continue;
+                    else
+                    {
+                        bufferList.AddRange(buffer);
+                        break;
+                    }
+                }
+            }
             while (bufferList.Count < count)
             {
                 if (current_sp_.BytesToRead == 0) { Thread.Sleep(1); continue; }
@@ -139,7 +167,7 @@ namespace radar.serial
 
 
 
-        private byte[] packageData(int commandId, byte[] data)
+        private byte[] packageData(ushort commandId, byte[] data)
         {
             Frame frame = new();
             frame.Header.SOF = 0xA5;
@@ -175,11 +203,12 @@ namespace radar.serial
             {
                 Marshal.FreeHGlobal(bodyPtr);
             }
-            DjiCrc.AppendCrc16(ref bodyBuffer);
 
             byte[] totalBuffer = new byte[headerBuffer.Length + bodyBuffer.Length];
             Buffer.BlockCopy(headerBuffer, 0, totalBuffer, 0, headerBuffer.Length);
             Buffer.BlockCopy(bodyBuffer, 0, totalBuffer, headerBuffer.Length, bodyBuffer.Length);
+
+            DjiCrc.AppendCrc16(ref totalBuffer);
 
             return totalBuffer;
         }
@@ -192,13 +221,17 @@ namespace radar.serial
             while (true)
             {
                 totalBuffer.Clear();
-                if (!readBytesUntilFilled(totalBuffer, headerSize)) continue;
+                if (!readBytesUntilFilled(totalBuffer, headerSize, isReadingHead: true)) continue;
                 byte[] headerBuffer = totalBuffer.Take(headerSize).ToArray();
 
                 // Check if the first byte is 0xA5 (SOF) and CRC8 is valid
-                if (totalBuffer[0] != 0xA5 || !DjiCrc.VerifyCrc8(headerBuffer))
+                if (totalBuffer[0] != 0xA5)
                 {
-                    // LogManager.Instance.warning("[SerialHandler]Invalid header or CRC8");
+                    LogManager.Instance.warning("[SerialHandler]Invalid header or CRC8");
+                    continue;
+                }
+                if (!DjiCrc.VerifyCrc8(headerBuffer))
+                {
                     continue;
                 }
 
@@ -245,7 +278,21 @@ namespace radar.serial
         {
             IntPtr dataPtr = Marshal.UnsafeAddrOfPinnedArrayElement(data, 0);
             GameStatus gameStatus = Marshal.PtrToStructure<GameStatus>(dataPtr);
-            LogManager.Instance.log("[SerialHandler] <0x0001> GameStatus: " + gameStatus.GameType.ToString("X2") + " " + gameStatus.GameStage.ToString("X2"));
+            DataManager.Instance.UploadData(gameStatus,
+                (gameStatus) =>
+                {
+                    DataManager.Instance.stateData.gameState.GameStage = gameStatus.Stage;
+                    DataManager.Instance.stateData.gameState.GameTimeSeconds = gameStatus.StageRemainTime;
+                    DataManager.Instance.lastRecordTime = DateTime.Now;
+                    DataManager.Instance.lastRecordTimeSeconds = gameStatus.StageRemainTime;
+                }
+            );
+
+            LogManager.Instance.log("[SerialHandler] <0x0001> GameStatus: " +
+                "GameType: " + gameStatus.GameType.ToString() +
+                ", GameStage: " + gameStatus.Stage.ToString() +
+                ", StageRemainTime: " + gameStatus.StageRemainTime.ToString() +
+                ", SyncTimestamp: " + gameStatus.SyncTimestamp.ToString());
         }
 
         private void getGameRobotHp(byte[] data)
@@ -275,7 +322,7 @@ namespace radar.serial
 
         private void UpdateRobotHp(GameRobotHp gameRobotHp)
         {
-            bool isEnemyRedSide = DataManager.Instance.stateData.gameState_.EnemySide == Team.Red;
+            bool isEnemyRedSide = DataManager.Instance.stateData.gameState.EnemySide == Team.Red;
             DataManager.Instance.stateData.enemyRobots.Data[RobotType.Hero].HP = isEnemyRedSide ? gameRobotHp.Red1 : gameRobotHp.Blue1;
             DataManager.Instance.stateData.enemyRobots.Data[RobotType.Engineer].HP = isEnemyRedSide ? gameRobotHp.Red2 : gameRobotHp.Blue2;
             DataManager.Instance.stateData.enemyRobots.Data[RobotType.Infantry3].HP = isEnemyRedSide ? gameRobotHp.Red3 : gameRobotHp.Blue3;
@@ -297,7 +344,12 @@ namespace radar.serial
         private void getRadarStatus(byte[] data)
         {
             IntPtr dataPtr = Marshal.UnsafeAddrOfPinnedArrayElement(data, 0);
-            RadarInfo radarInfo = Marshal.PtrToStructure<RadarInfo>(dataPtr);
+            package.RadarInfo radarInfo = Marshal.PtrToStructure<package.RadarInfo>(dataPtr);
+            DataManager.Instance.UploadData(radarInfo, (radarInfo) =>
+            {
+                DataManager.Instance.stateData.radarInfo.DoubleDebuffChances = radarInfo.DoubleDebuffChances;
+                DataManager.Instance.stateData.radarInfo.IsDoubleDebuffAble = radarInfo.IsDoubleDebuffAble;
+            });
             LogManager.Instance.log("[SerialHandler] <0x020E> RadarStatus: " +
                 "DoubleDebuffChances: " + radarInfo.DoubleDebuffChances.ToString() +
                 ",IsDoubleDebuffAble: " + radarInfo.IsDoubleDebuffAble.ToString());
