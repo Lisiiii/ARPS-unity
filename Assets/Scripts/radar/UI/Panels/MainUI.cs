@@ -315,7 +315,7 @@ namespace radar.ui.panel
         private void UpdateGameState(StateDatas state)
         {
             InfoBarView.GameTime.SetStateName(state.gameState_.GameStage);
-            initialTime = DateTime.Now.AddMinutes(7);
+            // initialTime = DateTime.Now.AddMinutes(7);
 
             InfoBarView.GameTime.SetRound(1, 3);
             InfoBarView.EnemySide.SetEnemySide(state.gameState_.EnemySide);

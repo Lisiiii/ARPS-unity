@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using radar.data;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +15,7 @@ namespace radar.webcamera
 
         void Start()
         {
+            LogManager.Instance.log("[WebCameraHandler]Starting...");
         }
 
         void Update()
@@ -43,9 +45,12 @@ namespace radar.webcamera
                 }
                 devices_ = WebCamTexture.devices;
                 OnCameraScanned?.Invoke(devices_);
+                LogManager.Instance.log("[WebCameraHandler]Camera devices scanned: " + devices_.Length + " devices found.");
+                for (int i = 0; i < devices_.Length; i++)
+                    LogManager.Instance.log("[WebCameraHandler]--- Camera device " + i + ": " + devices_[i].name);
             }
             else
-                Debug.Log("Camera permission denied.");
+                LogManager.Instance.error("[WebCameraHandler]Camera permission denied.");
 
         }
 
@@ -54,13 +59,19 @@ namespace radar.webcamera
             int height = inputTexture_.height;
             int width = inputTexture_.width;
             if (WebCamTexture.devices.Length <= 0)
+            {
+                LogManager.Instance.error("[WebCameraHandler]No camera devices found.");
                 return false;
+            }
             int i = 0;
             for (; i < WebCamTexture.devices.Length; i++)
                 if (WebCamTexture.devices[i].name.CompareTo(devicename) == 0)
                     break;
             if (i == WebCamTexture.devices.Length)
+            {
+                LogManager.Instance.error("[WebCameraHandler]Camera device not found.");
                 return false;
+            }
 
             webCamTexture_ = new WebCamTexture(devicename, width, height, 60)
             {
@@ -68,6 +79,13 @@ namespace radar.webcamera
             };
             webCamTexture_.Play();
 
+            if (webCamTexture_.isPlaying)
+                LogManager.Instance.log("[WebCameraHandler]Camera opened successfully.");
+            else
+            {
+                LogManager.Instance.error("[WebCameraHandler]Failed to open camera.");
+                return false;
+            }
             return true;
         }
 

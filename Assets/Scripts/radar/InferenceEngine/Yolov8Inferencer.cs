@@ -5,6 +5,7 @@ using radar.utils;
 using System;
 using UnityEngine.UI;
 using Unity.Mathematics;
+using radar.data;
 
 namespace radar.Yolov8
 {
@@ -22,6 +23,9 @@ namespace radar.Yolov8
         {
             classCount_ = classCount;
             worker_ = new Unity.InferenceEngine.Worker(Unity.InferenceEngine.ModelLoader.Load(inferenceModel), Unity.InferenceEngine.BackendType.GPUCompute);
+
+            LogManager.Instance.log($"[Yolov8Inferencer]Model loaded: {inferenceModel.name}");
+            LogManager.Instance.log($"[Yolov8Inferencer]Model class count: {classCount_}");
         }
 
         // Asynchronously run inference on the input texture,if the inference is done, return the result,or return null.
@@ -105,8 +109,6 @@ namespace radar.Yolov8
                 List<BoundingBox> suppressedBoxes = NMS.NonMaxSuppression(kvp.Value, nmsThreshold);
                 if (suppressedBoxes.Count == 0) continue;
                 finalResults.Add(kvp.Key, suppressedBoxes);
-                // Debug.Log($"{(classCount > 1 ? "Armor" : "Car")}| Class {kvp.Key} has {suppressedBoxes.Count} boxes after NMS");
-                LogManager.Instance.log($"{kvp.Key}");
             }
 
 

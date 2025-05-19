@@ -7,113 +7,142 @@ using Unity.VisualScripting;
 using System.Collections.Concurrent;
 using radar.serial.package;
 using System.Runtime.InteropServices;
+using radar.serial;
 
-public class DataManager : MonoBehaviour
+namespace radar.data
 {
-    public static DataManager Instance
+    public class DataManager : MonoBehaviour
     {
-        get
+        public static DataManager Instance
         {
-            if (instance_ == null)
+            get
             {
-                instance_ = FindAnyObjectByType<DataManager>();
                 if (instance_ == null)
                 {
-                    GameObject obj = new GameObject("DataManager");
-                    instance_ = obj.AddComponent<DataManager>();
+                    instance_ = FindAnyObjectByType<DataManager>();
+                    if (instance_ == null)
+                    {
+                        GameObject obj = new GameObject("DataManager");
+                        instance_ = obj.AddComponent<DataManager>();
+                    }
                 }
+                return instance_;
             }
-            return instance_;
         }
-    }
-    public ConcurrentQueue<StateDatas> updatedStateQueue = new ConcurrentQueue<StateDatas>();
-    public event Action<StateDatas> OnDataUpdated;
-    public ref StateDatas stateData => ref stateData_;    // Read-only property to access the state data
-    public float sendFrequencyHz = 10f;
-    private static DataManager instance_;
-    private StateDatas stateData_ = new();
-    private bool isDataUpdated_ = false;
-    public void Start()
-    {
-    }
-
-    public void Update()
-    {
-        DequeueData();
-        UpdateData();
-
-        if (isDataUpdated_)
+        public ConcurrentQueue<StateDatas> updatedStateQueue = new ConcurrentQueue<StateDatas>();
+        public event Action<StateDatas> OnDataUpdated;
+        public ref StateDatas stateData => ref stateData_;    // Read-only property to access the state data
+        public float sendFrequencyHz = 10f;
+        private static DataManager instance_;
+        private StateDatas stateData_ = new();
+        private bool isDataUpdated_ = false;
+        public void Start()
         {
-            OnDataUpdated?.Invoke(stateData_);
-            isDataUpdated_ = false;
         }
 
-        // Send data at the specified frequency
-        if (Time.frameCount % Mathf.RoundToInt(60f / sendFrequencyHz) == 0)
-            SendData();
-    }
-
-    public void UploadData<T>(T data, Action<T> updateAction)
-    {
-        updateAction?.Invoke(data);
-        isDataUpdated_ = true;
-    }
-
-    // Get data from the queue
-    private void DequeueData()
-    {
-        // Clear the queue if it exceeds 2 items
-        while (updatedStateQueue.Count > 2) { updatedStateQueue.TryDequeue(out _); }
-        if (updatedStateQueue.TryDequeue(out StateDatas updatedState))
+        public void Update()
         {
-            stateData_ = updatedState;
+            DequeueData();
+            UpdateData();
+
+            if (isDataUpdated_)
+            {
+                OnDataUpdated?.Invoke(stateData_);
+                isDataUpdated_ = false;
+            }
+
+            // Send data at the specified frequency
+            if (Time.frameCount % Mathf.RoundToInt(60f / sendFrequencyHz) == 0)
+                SendData();
+        }
+
+        public void UploadData<T>(T data, Action<T> updateAction)
+        {
+            updateAction?.Invoke(data);
             isDataUpdated_ = true;
         }
-    }
 
-    private void UpdateData()
-    {
-        foreach (var robotState in stateData_.enemyRobots.Data)
+        // Get data from the queue
+        private void DequeueData()
         {
-            if (!robotState.Value.IsTracked) continue;
-
-            if (DateTime.Now - robotState.Value.LastUpdateTime > TimeSpan.FromSeconds(2))
+            // Clear the queue if it exceeds 2 items
+            while (updatedStateQueue.Count > 2) { updatedStateQueue.TryDequeue(out _); }
+            if (updatedStateQueue.TryDequeue(out StateDatas updatedState))
             {
-                robotState.Value.IsTracked = false;
-                robotState.Value.Position = new Vector2(11.25f, 5.3f);
+                stateData_ = updatedState;
                 isDataUpdated_ = true;
             }
-
-            // TODO: Using Kalman filter to smooth the position data 
         }
-    }
 
-    private void SendData()
-    {
-        MapRobotData mapDataToSend = new MapRobotData();
-        mapDataToSend.HeroPositionX = (ushort)stateData_.enemyRobots.Data[RobotType.Hero].Position.x;
-        mapDataToSend.HeroPositionY = (ushort)stateData_.enemyRobots.Data[RobotType.Hero].Position.y;
-        mapDataToSend.EngineerPositionX = (ushort)stateData_.enemyRobots.Data[RobotType.Engineer].Position.x;
-        mapDataToSend.EngineerPositionY = (ushort)stateData_.enemyRobots.Data[RobotType.Engineer].Position.y;
-        mapDataToSend.Infantry3PositionX = (ushort)stateData_.enemyRobots.Data[RobotType.Infantry5].Position.x;
-        mapDataToSend.Infantry3PositionY = (ushort)stateData_.enemyRobots.Data[RobotType.Infantry5].Position.y;
-        mapDataToSend.Infantry4PositionX = (ushort)stateData_.enemyRobots.Data[RobotType.Infantry4].Position.x;
-        mapDataToSend.Infantry4PositionY = (ushort)stateData_.enemyRobots.Data[RobotType.Infantry4].Position.y;
-        mapDataToSend.Infantry5PositionX = (ushort)stateData_.enemyRobots.Data[RobotType.Infantry5].Position.x;
-        mapDataToSend.Infantry5PositionY = (ushort)stateData_.enemyRobots.Data[RobotType.Infantry5].Position.y;
-        mapDataToSend.SentryPositionX = (ushort)stateData_.enemyRobots.Data[RobotType.Sentry].Position.x;
-        mapDataToSend.SentryPositionY = (ushort)stateData_.enemyRobots.Data[RobotType.Sentry].Position.y;
+        private void UpdateData()
+        {
+            foreach (var robotState in stateData_.enemyRobots.Data)
+            {
+                if (!robotState.Value.IsTracked) continue;
 
-        byte[] dataToSend = new byte[Marshal.SizeOf(typeof(MapRobotData))];
-        IntPtr ptr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(MapRobotData)));
-        Marshal.StructureToPtr(mapDataToSend, ptr, true);
-        Marshal.Copy(ptr, dataToSend, 0, Marshal.SizeOf(typeof(MapRobotData)));
-        Marshal.FreeHGlobal(ptr);
+                if (DateTime.Now - robotState.Value.LastUpdateTime > TimeSpan.FromSeconds(2))
+                {
+                    robotState.Value.IsTracked = false;
+                    robotState.Value.Position = new Vector2(11.25f, 5.3f);
+                    isDataUpdated_ = true;
+                }
 
-        radar.serial.SerialHandler.Instance.SendData(0x0305, dataToSend);
-    }
-    private void OnDestroy()
-    {
-        instance_ = null;
+                // TODO: Using Kalman filter to smooth the position data 
+            }
+        }
+
+        private void SendData()
+        {
+            if (!SerialHandler.Instance.isConnected) return;
+
+            Dictionary<RobotType, Vector2> realLocationRobots = new();
+            foreach (var robot in stateData_.enemyRobots.Data)
+            {
+                Vector2 location =
+                          stateData.gameState_.EnemySide == Team.Blue
+                              ? new Vector2(robot.Value.Position.x + 14f, robot.Value.Position.y + 7.5f)
+                              : new Vector2(28f - (robot.Value.Position.x + 14f), 15f - (robot.Value.Position.y + 7.5f));
+                // 2025赛季更改了地图坐标单位,现为cm,这里 m -> cm
+                Vector2 robotCoordinate = new(location.x * 100, location.y * 100);
+                realLocationRobots.Add(robot.Key, robotCoordinate);
+            }
+
+            MapRobotData mapDataToSend = new MapRobotData
+            {
+                HeroPositionX = (ushort)realLocationRobots[RobotType.Hero].x,
+                HeroPositionY = (ushort)realLocationRobots[RobotType.Hero].y,
+                EngineerPositionX = (ushort)realLocationRobots[RobotType.Engineer].x,
+                EngineerPositionY = (ushort)realLocationRobots[RobotType.Engineer].y,
+                Infantry3PositionX = (ushort)realLocationRobots[RobotType.Infantry3].x,
+                Infantry3PositionY = (ushort)realLocationRobots[RobotType.Infantry3].y,
+                Infantry4PositionX = (ushort)realLocationRobots[RobotType.Infantry4].x,
+                Infantry4PositionY = (ushort)realLocationRobots[RobotType.Infantry4].y,
+                Infantry5PositionX = (ushort)realLocationRobots[RobotType.Infantry5].x,
+                Infantry5PositionY = (ushort)realLocationRobots[RobotType.Infantry5].y,
+                SentryPositionX = (ushort)realLocationRobots[RobotType.Sentry].x,
+                SentryPositionY = (ushort)realLocationRobots[RobotType.Sentry].y
+            };
+
+            byte[] dataToSend = new byte[Marshal.SizeOf(typeof(MapRobotData))];
+            IntPtr ptr = Marshal.AllocHGlobal(Marshal.SizeOf(typeof(MapRobotData)));
+            Marshal.StructureToPtr(mapDataToSend, ptr, true);
+            Marshal.Copy(ptr, dataToSend, 0, Marshal.SizeOf(typeof(MapRobotData)));
+            Marshal.FreeHGlobal(ptr);
+
+            serial.SerialHandler.Instance.SendData(0x0305, dataToSend);
+
+            LogManager.Instance.log("[DataManager]Send data: {" +
+                $"Hero: ({mapDataToSend.HeroPositionX}, {mapDataToSend.HeroPositionY}), " +
+                $"Engineer: ({mapDataToSend.EngineerPositionX}, {mapDataToSend.EngineerPositionY}), " +
+                $"Infantry3: ({mapDataToSend.Infantry3PositionX}, {mapDataToSend.Infantry3PositionY}), " +
+                $"Infantry4: ({mapDataToSend.Infantry4PositionX}, {mapDataToSend.Infantry4PositionY}), " +
+                $"Infantry5: ({mapDataToSend.Infantry5PositionX}, {mapDataToSend.Infantry5PositionY}), " +
+                $"Sentry: ({mapDataToSend.SentryPositionX}, {mapDataToSend.SentryPositionY})" +
+                "}");
+        }
+        private void OnDestroy()
+        {
+            instance_ = null;
+        }
     }
 }

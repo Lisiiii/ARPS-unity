@@ -1,0 +1,226 @@
+--- Log File Created: 2025-05-20 02:47:21.507 ---
+[2025-05-20 02:47:21.636]<DEBUG> [Detector]Robot Inferencer initializing...
+[2025-05-20 02:47:21.636]<DEBUG> [Yolov8Inferencer]Model loaded: car_v8n
+[2025-05-20 02:47:21.637]<DEBUG> [Yolov8Inferencer]Model class count: 1
+[2025-05-20 02:47:21.637]<DEBUG> [Yolov8Inferencer]Model loaded: armor_v8n
+[2025-05-20 02:47:21.638]<DEBUG> [Yolov8Inferencer]Model class count: 12
+[2025-05-20 02:47:21.638]<DEBUG> [Detector]initialized.
+[2025-05-20 02:47:28.357]<DEBUG> [SerialHandler]Serial port closed.
+[2025-05-20 02:47:28.358]<DEBUG> [SerialHandler]Serial port opened: COM6
+[2025-05-20 02:47:28.397]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:28.431]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:28.603]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:28.774]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:28.945]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:28.945]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:29.112]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:29.256]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:29.286]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:29.463]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:29.550]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:29.639]<DEBUG> [SerialHandler] <0x0101> GameBuff: IsSupplyAreaOccupied: False, IsSupplyAreaOccupied2: False, IsSupplyAreaOccupied3: False, IsLittleEnergyOrganActivated: False, IsBigEnergyOrganActivated: False, IsCentralHighlandOccupied: False, IsTrapezoidalHighlandOccupied: False, EnemyDartHitTime: 0, EnemyDartHitTarget: 0, CenterGainPointStatus: 0
+[2025-05-20 02:47:29.640]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:29.670]<DEBUG> [SerialHandler] <0x020E> RadarStatus: DoubleDebuffChances: 0,IsDoubleDebuffAble: False
+[2025-05-20 02:47:29.815]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:29.843]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:29.985]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:30.158]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:30.158]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:30.327]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:30.472]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:30.500]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:30.671]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:30.757]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:30.842]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:31.014]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:31.042]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:31.186]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:31.324]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:31.353]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:31.521]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:31.690]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:31.855]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:31.967]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:32.024]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:32.194]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:32.222]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:32.363]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:32.531]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:32.532]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:32.701]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:32.843]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:32.870]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:33.036]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:33.150]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:33.206]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:33.382]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:33.438]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:33.556]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:33.728]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:33.729]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:33.901]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:34.071]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:34.071]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:34.239]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:34.349]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:34.406]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:34.573]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:34.741]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:35.020]<DEBUG> [Detector]Robot Inferencer initializing...
+[2025-05-20 02:47:35.021]<DEBUG> [Yolov8Inferencer]Model loaded: car_v8n
+[2025-05-20 02:47:35.021]<DEBUG> [Yolov8Inferencer]Model class count: 1
+[2025-05-20 02:47:35.022]<DEBUG> [Yolov8Inferencer]Model loaded: armor_v8n
+[2025-05-20 02:47:35.022]<DEBUG> [Yolov8Inferencer]Model class count: 12
+[2025-05-20 02:47:35.023]<DEBUG> [Detector]initialized.
+[2025-05-20 02:47:35.023]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:35.023]<DEBUG> [Detector]Detection started.
+[2025-05-20 02:47:35.176]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:35.271]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:35.362]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1400, 750, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:35.535]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1290, 761, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:35.561]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:35.706]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1290, 761, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:35.848]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:35.878]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1290, 761, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:36.059]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1625, 931, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:36.140]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:36.228]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1652, 937, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:36.398]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 1652, 937, Infantry3: 1400, 750, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:36.570]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 993, 523, Infantry3: 1236, 1019, Infantry4: 1400, 750, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:36.741]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:36.741]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 993, 523, Infantry3: 1236, 1019, Infantry4: 1242, 599, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:36.966]<DEBUG> [DataManager]Send data: {Hero: 1400, 750, Engineer: 993, 523, Infantry3: 1236, 1019, Infantry4: 1242, 599, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:37.076]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:37.135]<DEBUG> [DataManager]Send data: {Hero: 1379, 426, Engineer: 993, 523, Infantry3: 1236, 1019, Infantry4: 1230, 584, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:37.308]<DEBUG> [DataManager]Send data: {Hero: 1319, 347, Engineer: 993, 523, Infantry3: 1236, 1019, Infantry4: 1230, 584, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:37.481]<DEBUG> [DataManager]Send data: {Hero: 1319, 347, Engineer: 993, 523, Infantry3: 1236, 1019, Infantry4: 1230, 584, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:37.661]<DEBUG> [SerialHandler] <0x0101> GameBuff: IsSupplyAreaOccupied: False, IsSupplyAreaOccupied2: False, IsSupplyAreaOccupied3: False, IsLittleEnergyOrganActivated: False, IsBigEnergyOrganActivated: False, IsCentralHighlandOccupied: False, IsTrapezoidalHighlandOccupied: False, EnemyDartHitTime: 0, EnemyDartHitTarget: 0, CenterGainPointStatus: 0
+[2025-05-20 02:47:37.661]<DEBUG> [DataManager]Send data: {Hero: 1074, 378, Engineer: 993, 523, Infantry3: 1236, 1019, Infantry4: 1230, 584, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:37.835]<DEBUG> [DataManager]Send data: {Hero: 1071, 357, Engineer: 993, 523, Infantry3: 1236, 1019, Infantry4: 1230, 584, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:37.949]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:38.008]<DEBUG> [DataManager]Send data: {Hero: 1071, 357, Engineer: 993, 523, Infantry3: 1236, 1019, Infantry4: 1230, 584, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:38.179]<DEBUG> [DataManager]Send data: {Hero: 1071, 358, Engineer: 993, 523, Infantry3: 1551, 1092, Infantry4: 1230, 584, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:38.237]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:38.352]<DEBUG> [DataManager]Send data: {Hero: 1071, 358, Engineer: 993, 523, Infantry3: 1551, 1092, Infantry4: 1230, 584, Infantry5: 1400, 750, Sentry: 1400, 750}
+[2025-05-20 02:47:38.525]<DEBUG> [DataManager]Send data: {Hero: 1071, 358, Engineer: 2525, 1280, Infantry3: 1551, 1092, Infantry4: 1230, 584, Infantry5: 1400, 750, Sentry: 1520, 1131}
+[2025-05-20 02:47:38.553]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:38.642]<DEBUG> [SerialHandler] <0x0001> GameStatus: 01 00
+[2025-05-20 02:47:38.698]<DEBUG> [DataManager]Send data: {Hero: 1071, 358, Engineer: 2525, 1280, Infantry3: 1551, 1092, Infantry4: 1230, 584, Infantry5: 1400, 750, Sentry: 1465, 1115}
+[2025-05-20 02:47:38.839]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:38.869]<DEBUG> [DataManager]Send data: {Hero: 1071, 358, Engineer: 2525, 1280, Infantry3: 1551, 1092, Infantry4: 1230, 584, Infantry5: 1400, 750, Sentry: 1465, 1115}
+[2025-05-20 02:47:39.047]<DEBUG> [DataManager]Send data: {Hero: 1071, 358, Engineer: 1225, 1012, Infantry3: 1551, 1092, Infantry4: 1230, 584, Infantry5: 1400, 750, Sentry: 1465, 1115}
+[2025-05-20 02:47:39.162]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:39.219]<DEBUG> [DataManager]Send data: {Hero: 1071, 358, Engineer: 1225, 1012, Infantry3: 1551, 1092, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1465, 1115}
+[2025-05-20 02:47:39.389]<DEBUG> [DataManager]Send data: {Hero: 1071, 358, Engineer: 1353, 1162, Infantry3: 1225, 1016, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1465, 1115}
+[2025-05-20 02:47:39.447]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:39.563]<DEBUG> [DataManager]Send data: {Hero: 1071, 358, Engineer: 1267, 1159, Infantry3: 1225, 1016, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1465, 1115}
+[2025-05-20 02:47:39.734]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:39.734]<DEBUG> [DataManager]Send data: {Hero: 1071, 358, Engineer: 1267, 1159, Infantry3: 1225, 1016, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1221, 1147}
+[2025-05-20 02:47:39.905]<DEBUG> [DataManager]Send data: {Hero: 1071, 358, Engineer: 1267, 1159, Infantry3: 1225, 1016, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1127, 1128}
+[2025-05-20 02:47:40.047]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:40.078]<DEBUG> [DataManager]Send data: {Hero: 1071, 358, Engineer: 1267, 1159, Infantry3: 1225, 1016, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1127, 1128}
+[2025-05-20 02:47:40.251]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 1267, 1159, Infantry3: 1225, 1016, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1123, 1126}
+[2025-05-20 02:47:40.365]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:40.423]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 1267, 1159, Infantry3: 1225, 1016, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1108, 1104}
+[2025-05-20 02:47:40.595]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 1231, 1020, Infantry3: 1225, 1016, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1097, 1089}
+[2025-05-20 02:47:40.650]<DEBUG> [SerialHandler] <0x0001> GameStatus: 01 00
+[2025-05-20 02:47:40.765]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 1076, 1059, Infantry3: 1225, 1016, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1097, 1089}
+[2025-05-20 02:47:40.936]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:40.937]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 1076, 1059, Infantry3: 1225, 1016, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1097, 1089}
+[2025-05-20 02:47:41.109]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 1076, 1059, Infantry3: 1225, 1016, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1042, 1010}
+[2025-05-20 02:47:41.283]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 1076, 1059, Infantry3: 1225, 1016, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1012, 967}
+[2025-05-20 02:47:41.460]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 1076, 1059, Infantry3: 2525, 1280, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1012, 967}
+[2025-05-20 02:47:41.544]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:41.633]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 1076, 1059, Infantry3: 2525, 1280, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 999, 940}
+[2025-05-20 02:47:41.809]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 1076, 1059, Infantry3: 2525, 1280, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 999, 889}
+[2025-05-20 02:47:41.866]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:41.985]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 1076, 1059, Infantry3: 2525, 1280, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 999, 860}
+[2025-05-20 02:47:42.160]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:42.161]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 1076, 1059, Infantry3: 2525, 1280, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 999, 860}
+[2025-05-20 02:47:42.330]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 999, 829, Infantry3: 2525, 1280, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 999, 860}
+[2025-05-20 02:47:42.448]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:42.504]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 999, 829, Infantry3: 2525, 1280, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1007, 768}
+[2025-05-20 02:47:42.659]<DEBUG> [SerialHandler] <0x020E> RadarStatus: DoubleDebuffChances: 0,IsDoubleDebuffAble: False
+[2025-05-20 02:47:42.689]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 999, 829, Infantry3: 2525, 1280, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1007, 768}
+[2025-05-20 02:47:42.746]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:42.863]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 999, 829, Infantry3: 2525, 1280, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1007, 768}
+[2025-05-20 02:47:43.040]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:43.041]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 999, 829, Infantry3: 2525, 1280, Infantry4: 1248, 1025, Infantry5: 1400, 750, Sentry: 1007, 768}
+[2025-05-20 02:47:43.214]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 999, 829, Infantry3: 2525, 1280, Infantry4: 1248, 1025, Infantry5: 1400, 750, Sentry: 1007, 768}
+[2025-05-20 02:47:43.356]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:43.387]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 999, 829, Infantry3: 2525, 1280, Infantry4: 1248, 1025, Infantry5: 1400, 750, Sentry: 1007, 768}
+[2025-05-20 02:47:43.560]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 999, 829, Infantry3: 2525, 1280, Infantry4: 1248, 1025, Infantry5: 1400, 750, Sentry: 1451, 1500}
+[2025-05-20 02:47:43.710]<DEBUG> [SerialHandler] <0x020E> RadarStatus: DoubleDebuffChances: 0,IsDoubleDebuffAble: False
+[2025-05-20 02:47:43.753]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 999, 829, Infantry3: 2525, 1280, Infantry4: 1248, 1025, Infantry5: 1400, 750, Sentry: 1451, 1500}
+[2025-05-20 02:47:43.925]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 999, 829, Infantry3: 2525, 1280, Infantry4: 1248, 1025, Infantry5: 1400, 750, Sentry: 1451, 1500}
+[2025-05-20 02:47:43.952]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:44.099]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 999, 829, Infantry3: 2525, 1280, Infantry4: 1248, 1025, Infantry5: 1400, 750, Sentry: 1450, 1500}
+[2025-05-20 02:47:44.242]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:44.273]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 2525, 1280, Infantry3: 2525, 1280, Infantry4: 1248, 1025, Infantry5: 1400, 750, Sentry: 1450, 1500}
+[2025-05-20 02:47:44.448]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 2525, 1280, Infantry3: 2525, 1280, Infantry4: 1248, 1025, Infantry5: 1400, 750, Sentry: 1450, 1500}
+[2025-05-20 02:47:44.567]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:44.623]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 2525, 1280, Infantry3: 2525, 1280, Infantry4: 1248, 1025, Infantry5: 1400, 750, Sentry: 1450, 1500}
+[2025-05-20 02:47:44.798]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 2525, 1280, Infantry3: 2525, 1280, Infantry4: 1248, 1025, Infantry5: 1400, 750, Sentry: 1450, 1500}
+[2025-05-20 02:47:44.855]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:44.971]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 2525, 1280, Infantry3: 2525, 1280, Infantry4: 1248, 1025, Infantry5: 1400, 750, Sentry: 1450, 1500}
+[2025-05-20 02:47:45.140]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 2525, 1280, Infantry3: 2525, 1280, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1448, 1500}
+[2025-05-20 02:47:45.169]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:45.320]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 2525, 1280, Infantry3: 2525, 1280, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1448, 1500}
+[2025-05-20 02:47:45.440]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:45.500]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 2525, 1280, Infantry3: 2525, 1280, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1450, 1500}
+[2025-05-20 02:47:45.682]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 2525, 1280, Infantry3: 2525, 1280, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1450, 1500}
+[2025-05-20 02:47:45.740]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:45.856]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 950, 384, Infantry3: 2525, 1280, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1448, 1500}
+[2025-05-20 02:47:46.038]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 950, 384, Infantry3: 2525, 1280, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1448, 1500}
+[2025-05-20 02:47:46.065]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:46.214]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 950, 384, Infantry3: 2525, 1280, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1451, 1500}
+[2025-05-20 02:47:46.357]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:46.387]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 950, 384, Infantry3: 2525, 1280, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1451, 1500}
+[2025-05-20 02:47:46.561]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 950, 384, Infantry3: 2525, 1280, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1450, 1500}
+[2025-05-20 02:47:46.735]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 950, 384, Infantry3: 2525, 1280, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1450, 1500}
+[2025-05-20 02:47:46.909]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 953, 386, Infantry3: 2525, 1280, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1450, 1500}
+[2025-05-20 02:47:46.938]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:47.090]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 953, 386, Infantry3: 2525, 1280, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1450, 1500}
+[2025-05-20 02:47:47.230]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:47.262]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 953, 386, Infantry3: 2525, 1280, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1450, 1500}
+[2025-05-20 02:47:47.435]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 953, 385, Infantry3: 2525, 1280, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1450, 1500}
+[2025-05-20 02:47:47.549]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:47.608]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 953, 385, Infantry3: 2525, 1280, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1450, 1500}
+[2025-05-20 02:47:47.664]<DEBUG> [SerialHandler] <0x0001> GameStatus: 01 00
+[2025-05-20 02:47:47.780]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 953, 385, Infantry3: 2525, 1280, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1450, 1500}
+[2025-05-20 02:47:47.838]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:47.956]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 953, 391, Infantry3: 2525, 1280, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1450, 1500}
+[2025-05-20 02:47:48.129]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 953, 391, Infantry3: 2525, 1280, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1450, 1500}
+[2025-05-20 02:47:48.156]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:48.304]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 956, 388, Infantry3: 1285, 1164, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1450, 1500}
+[2025-05-20 02:47:48.477]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 956, 388, Infantry3: 1285, 1164, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1450, 1500}
+[2025-05-20 02:47:48.648]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 956, 388, Infantry3: 1285, 1164, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1450, 1500}
+[2025-05-20 02:47:48.732]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:48.821]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 953, 391, Infantry3: 1267, 1181, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 1450, 1500}
+[2025-05-20 02:47:49.003]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 953, 391, Infantry3: 1267, 1181, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 2525, 1280}
+[2025-05-20 02:47:49.061]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:49.176]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 956, 391, Infantry3: 1238, 1183, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 2525, 1280}
+[2025-05-20 02:47:49.352]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:49.352]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 956, 391, Infantry3: 1238, 1183, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 2525, 1280}
+[2025-05-20 02:47:49.546]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 956, 391, Infantry3: 1238, 1183, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 2525, 1280}
+[2025-05-20 02:47:49.663]<DEBUG> [SerialHandler] <0x0101> GameBuff: IsSupplyAreaOccupied: False, IsSupplyAreaOccupied2: False, IsSupplyAreaOccupied3: False, IsLittleEnergyOrganActivated: False, IsBigEnergyOrganActivated: False, IsCentralHighlandOccupied: False, IsTrapezoidalHighlandOccupied: False, EnemyDartHitTime: 0, EnemyDartHitTarget: 0, CenterGainPointStatus: 0
+[2025-05-20 02:47:49.722]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 956, 391, Infantry3: 883, 1082, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 956, 392}
+[2025-05-20 02:47:49.896]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 956, 391, Infantry3: 883, 1082, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 956, 392}
+[2025-05-20 02:47:49.951]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:50.067]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 956, 393, Infantry3: 883, 1082, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 956, 392}
+[2025-05-20 02:47:50.219]<DEBUG> [Detector]Detection stopped.
+[2025-05-20 02:47:50.244]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 956, 393, Infantry3: 883, 1082, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 956, 392}
+[2025-05-20 02:47:50.272]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:50.415]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 956, 393, Infantry3: 883, 1082, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 956, 392}
+[2025-05-20 02:47:50.555]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:50.584]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 956, 393, Infantry3: 883, 1082, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 956, 392}
+[2025-05-20 02:47:50.640]<DEBUG> [SerialHandler] <0x0001> GameStatus: 01 00
+[2025-05-20 02:47:50.762]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 956, 393, Infantry3: 883, 1082, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 956, 392}
+[2025-05-20 02:47:50.849]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:50.935]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 956, 393, Infantry3: 883, 1082, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 956, 392}
+[2025-05-20 02:47:51.090]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 956, 393, Infantry3: 883, 1082, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 956, 392}
+[2025-05-20 02:47:51.175]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:51.260]<DEBUG> [DataManager]Send data: {Hero: 2525, 1280, Engineer: 956, 393, Infantry3: 883, 1082, Infantry4: 2525, 1280, Infantry5: 1400, 750, Sentry: 956, 392}
+[2025-05-20 02:47:51.459]<DEBUG> [SerialHandler] <0x0003> GameRobotHp: Red1: 0, Red2: 0, Red3: 100, Red4: 0, Red5: 0, Red7: 0, RedOutpost: 0, RedBase: 0, Blue1: 250, Blue2: 0, Blue3: 0, Blue4: 0, Blue5: 0, Blue7: 0, BlueOutpost: 0, BlueBase: 0
+[2025-05-20 02:47:51.459]<DEBUG> --- Log File Closed: 2025-05-20 02:47:51.459 ---
+

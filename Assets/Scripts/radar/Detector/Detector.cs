@@ -40,10 +40,14 @@ namespace radar.detector
         }
         void Initialize()
         {
+            LogManager.Instance.log("[Detector]Robot Inferencer initializing...");
+
             robotInferencer_ = new Yolov8Inferencer(robotModelAsset_, robotClassCount_);
             armorInferencer_ = new Yolov8Inferencer(armorModelAsset_, armorClassCount_);
             rawTexture_ = new Texture2D(inputTexture_.width, inputTexture_.height, TextureFormat.RGB24, false);
             inferenceResults_ = new Dictionary<int, List<BoundingBox>>();
+
+            LogManager.Instance.log("[Detector]initialized.");
         }
 
         void Update()
@@ -60,6 +64,8 @@ namespace radar.detector
             {
                 Initialize();
                 StartCoroutine(nameof(Detection));
+
+                LogManager.Instance.log("[Detector]Detection started.");
             }
             else
             {
@@ -68,6 +74,8 @@ namespace radar.detector
                 robotInferencer_ = null;
                 armorInferencer_.Dispose();
                 armorInferencer_ = null;
+
+                LogManager.Instance.log("[Detector]Detection stopped.");
             }
         }
 
@@ -79,14 +87,15 @@ namespace radar.detector
             {
                 inferenceResults_.Clear();
                 robotResults = null;
-                while (robotResults == null)
+                yield return new WaitUntil(() =>
                 {
                     robotResults = robotInferencer_.inference(rawTexture_, 0.1f, 0.2f);
-                    yield return null;
-                }
+                    return robotResults != null;
+                });
+
                 if (robotResults.Count == 0)
                 {
-                    yield return null;
+                    yield return new WaitForFixedUpdate();
                     continue;
                 }
 
@@ -109,11 +118,12 @@ namespace radar.detector
 
 
                     armorResults = null;
-                    while (armorResults == null)
+
+                    yield return new WaitUntil(() =>
                     {
                         armorResults = armorInferencer_.inference(clipedTexture, 0.1f, 0.2f);
-                        yield return null;
-                    }
+                        return armorResults != null;
+                    });
                     Vector2 robotType = new Vector2(-1, 0);
 
                     if (armorResults.Count != 0)
@@ -166,14 +176,15 @@ namespace radar.detector
                 {
                     Vector2 centerPoint = new(
                         (int)((inferenceResults[classIndex][classCount].XMin + inferenceResults[classIndex][classCount].XMax) / 2),
-                        (int)((inferenceResults[classIndex][classCount].YMin + inferenceResults[classIndex][classCount].YMax) / 2)
+                        (int)(inferenceResults[classIndex][classCount].YMin +
+                         ((inferenceResults[classIndex][classCount].YMax - inferenceResults[classIndex][classCount].YMin) / 4))
                     );
 
                     Ray ray = rayCastCamera_.ScreenPointToRay(centerPoint);
                     RaycastHit hit;
                     if (Physics.Raycast(ray, out hit))
                     {
-                        Vector2 robotCoordinate = new(hit.point.x, hit.point.z);
+                        Vector2 robotCoordinate = new Vector2(hit.point.x, hit.point.z);
                         RobotType robotType = (RobotType)(classIndex > 5 ? classIndex - 6 : classIndex);
                         RobotCoordinatePair newPair = new(robotCoordinate, robotType);
                         if (classIndex >= classScale.x && classIndex <= classScale.y)

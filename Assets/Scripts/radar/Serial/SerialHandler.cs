@@ -8,6 +8,7 @@ using radar.data;
 using System.Runtime.InteropServices;
 using radar.serial.crc;
 using radar.serial.package;
+using System.Linq;
 
 namespace radar.serial
 {
@@ -17,21 +18,22 @@ namespace radar.serial
         {
             get
             {
-                if (_instance == null)
+                if (instance_ == null)
                 {
-                    _instance = FindAnyObjectByType<SerialHandler>();
-                    if (_instance == null)
+                    instance_ = FindAnyObjectByType<SerialHandler>();
+                    if (instance_ == null)
                     {
                         GameObject obj = new GameObject("SerialHandler");
-                        _instance = obj.AddComponent<SerialHandler>();
+                        instance_ = obj.AddComponent<SerialHandler>();
                     }
                 }
-                return _instance;
+                return instance_;
             }
         }
-        private static SerialHandler _instance;
+        private static SerialHandler instance_;
         private SerialPort current_sp_;
         private Thread receiveThread_;
+        public bool isConnected => current_sp_ != null && current_sp_.IsOpen;
 
         public string[] ScanPorts()
         {
@@ -58,11 +60,13 @@ namespace radar.serial
                     current_sp_.Dispose();
                     current_sp_ = null;
                 }
+
+                LogManager.Instance.log("[SerialHandler]Serial port closed.");
                 return true;
             }
             catch (Exception ex)
             {
-                Debug.Log(ex);
+                LogManager.Instance.error(ex.ToString());
                 return false;
             }
         }
@@ -76,11 +80,13 @@ namespace radar.serial
 
                 receiveThread_ = new Thread(new ThreadStart(DataReceiveHandler));
                 receiveThread_.Start();
+
+                LogManager.Instance.log($"[SerialHandler]Serial port opened: {portName}");
                 return true;
             }
             catch (Exception ex)
             {
-                Debug.Log(ex);
+                LogManager.Instance.error($"[SerialHandler]Failed to open serial port: {ex}");
                 return false;
             }
         }
@@ -105,58 +111,33 @@ namespace radar.serial
             }
             catch (Exception ex)
             {
-                Debug.Log(ex);
+                LogManager.Instance.error("[SerialHandler]" + ex.ToString());
             }
         }
 
-        private void DataReceiveHandler()
+        private bool readBytesUntilFilled(List<byte> bufferList, int count)
         {
-            int headerSize = Marshal.SizeOf(typeof(FrameHeader));
-
-            while (true)
+            if (current_sp_ == null || !current_sp_.IsOpen) return false;
+            while (bufferList.Count < count)
             {
-                // Check if the thread is alive before proceeding
-                if (current_sp_ == null || !current_sp_.IsOpen) continue;
-                int count = current_sp_.BytesToRead;
-                if (count < headerSize) continue;
+                if (current_sp_.BytesToRead == 0) { Thread.Sleep(1); continue; }
 
-                // Read all data in one time
-                byte[] totalBuffer = new byte[Constants.FrameDataMaxLength];
-                current_sp_.Read(totalBuffer, 0, count);
-                byte[] headerBuffer = totalBuffer[..headerSize];
-
-                // Check if the first byte is 0xA5 (SOF) and CRC8 is valid
-                if (totalBuffer[0] != 0xA5) continue;
-                if (!DjiCrc.VerifyCrc8(headerBuffer)) continue;
-
-                // Reinterpret the header and body
-                FrameHeader header = Marshal.PtrToStructure<FrameHeader>(Marshal.UnsafeAddrOfPinnedArrayElement(headerBuffer, 0));
-                FrameBody body;
-                body.Data = new byte[header.DataLength];
-
-                byte[] bodyBuffer = totalBuffer[headerSize..(headerSize + header.DataLength + 2 * sizeof(ushort))];
-                if (!DjiCrc.VerifyCrc16(totalBuffer[..(headerBuffer.Length + bodyBuffer.Length)])) continue;
-
-                body = Marshal.PtrToStructure<FrameBody>(Marshal.UnsafeAddrOfPinnedArrayElement(bodyBuffer, 0));
-                switch (body.CommandId)
+                byte[] buffer = new byte[current_sp_.BytesToRead];
+                try
                 {
-                    // case 0x0001: // Game Status
-                    //     break;
-                    // case 0x0003: // Game Robot HP
-                    //     break;
-                    // case 0x0101: // Game Buff
-                    //     break;
-                    // case 0x020E: // Radar Status
-                    //     break;
-                    // case 0x0301: // Allied Robot Info
-                    //     break;
-                    default:
-                        Debug.Log("command ID: " + body.CommandId.ToString("X4"));
-                        break;
+                    current_sp_.Read(buffer, 0, buffer.Length);
                 }
-
+                catch (Exception ex)
+                {
+                    LogManager.Instance.error("[SerialHandler]" + ex.ToString());
+                    return false;
+                }
+                bufferList.AddRange(buffer);
             }
+            return true;
         }
+
+
 
         private byte[] packageData(int commandId, byte[] data)
         {
@@ -203,10 +184,164 @@ namespace radar.serial
             return totalBuffer;
         }
 
+        private void DataReceiveHandler()
+        {
+            int headerSize = Marshal.SizeOf(typeof(FrameHeader));
+            List<byte> totalBuffer = new();
+
+            while (true)
+            {
+                totalBuffer.Clear();
+                if (!readBytesUntilFilled(totalBuffer, headerSize)) continue;
+                byte[] headerBuffer = totalBuffer.Take(headerSize).ToArray();
+
+                // Check if the first byte is 0xA5 (SOF) and CRC8 is valid
+                if (totalBuffer[0] != 0xA5 || !DjiCrc.VerifyCrc8(headerBuffer))
+                {
+                    // LogManager.Instance.warning("[SerialHandler]Invalid header or CRC8");
+                    continue;
+                }
+
+                // Reinterpret the header and body
+                FrameHeader header = Marshal.PtrToStructure<FrameHeader>(Marshal.UnsafeAddrOfPinnedArrayElement(headerBuffer, 0));
+
+                if (!readBytesUntilFilled(totalBuffer, headerSize + header.DataLength + 2 * sizeof(ushort))) continue;
+
+                FrameBody body = new();
+                body.Data = new byte[header.DataLength];
+                byte[] bodyBuffer = totalBuffer.Skip(headerSize).Take(header.DataLength + 2 * sizeof(ushort)).ToArray();
+
+                if (!DjiCrc.VerifyCrc16(totalBuffer.Take(headerSize + bodyBuffer.Length).ToArray()))
+                {
+                    LogManager.Instance.warning("[SerialHandler]Invalid body CRC16");
+                    continue;
+                }
+
+                body = Marshal.PtrToStructure<FrameBody>(Marshal.UnsafeAddrOfPinnedArrayElement(bodyBuffer, 0));
+
+                switch (body.CommandId)
+                {
+                    case 0x0001: // Game Status
+                        getGameStatus(body.Data);
+                        break;
+                    case 0x0003: // Game Robot HP
+                        getGameRobotHp(body.Data);
+                        break;
+                    case 0x0101: // Game Buff
+                        getGameBuff(body.Data);
+                        break;
+                    case 0x020E: // Radar Status
+                        getRadarStatus(body.Data);
+                        break;
+                    // case 0x0301: // Allied Robot Info
+                    //     break;
+                    default:
+                        // LogManager.Instance.log($"[SerialHandler]CMD_ID:{body.CommandId:X4}");
+                        break;
+                }
+            }
+        }
+        private void getGameStatus(byte[] data)
+        {
+            IntPtr dataPtr = Marshal.UnsafeAddrOfPinnedArrayElement(data, 0);
+            GameStatus gameStatus = Marshal.PtrToStructure<GameStatus>(dataPtr);
+            LogManager.Instance.log("[SerialHandler] <0x0001> GameStatus: " + gameStatus.GameType.ToString("X2") + " " + gameStatus.GameStage.ToString("X2"));
+        }
+
+        private void getGameRobotHp(byte[] data)
+        {
+            IntPtr dataPtr = Marshal.UnsafeAddrOfPinnedArrayElement(data, 0);
+            GameRobotHp gameRobotHp = Marshal.PtrToStructure<GameRobotHp>(dataPtr);
+            DataManager.Instance.UploadData(gameRobotHp, UpdateRobotHp);
+
+            LogManager.Instance.log("[SerialHandler] <0x0003> GameRobotHp: " +
+                "Red1: " + gameRobotHp.Red1.ToString() +
+                ", Red2: " + gameRobotHp.Red2.ToString() +
+                ", Red3: " + gameRobotHp.Red3.ToString() +
+                ", Red4: " + gameRobotHp.Red4.ToString() +
+                ", Red5: " + gameRobotHp.Red5.ToString() +
+                ", Red7: " + gameRobotHp.Red7.ToString() +
+                ", RedOutpost: " + gameRobotHp.RedOutpost.ToString() +
+                ", RedBase: " + gameRobotHp.RedBase.ToString() +
+                ", Blue1: " + gameRobotHp.Blue1.ToString() +
+                ", Blue2: " + gameRobotHp.Blue2.ToString() +
+                ", Blue3: " + gameRobotHp.Blue3.ToString() +
+                ", Blue4: " + gameRobotHp.Blue4.ToString() +
+                ", Blue5: " + gameRobotHp.Blue5.ToString() +
+                ", Blue7: " + gameRobotHp.Blue7.ToString() +
+                ", BlueOutpost: " + gameRobotHp.BlueOutpost.ToString() +
+                ", BlueBase: " + gameRobotHp.BlueBase.ToString());
+        }
+
+        private void UpdateRobotHp(GameRobotHp gameRobotHp)
+        {
+            bool isEnemyRedSide = DataManager.Instance.stateData.gameState_.EnemySide == Team.Red;
+            DataManager.Instance.stateData.enemyRobots.Data[RobotType.Hero].HP = isEnemyRedSide ? gameRobotHp.Red1 : gameRobotHp.Blue1;
+            DataManager.Instance.stateData.enemyRobots.Data[RobotType.Engineer].HP = isEnemyRedSide ? gameRobotHp.Red2 : gameRobotHp.Blue2;
+            DataManager.Instance.stateData.enemyRobots.Data[RobotType.Infantry3].HP = isEnemyRedSide ? gameRobotHp.Red3 : gameRobotHp.Blue3;
+            DataManager.Instance.stateData.enemyRobots.Data[RobotType.Infantry4].HP = isEnemyRedSide ? gameRobotHp.Red4 : gameRobotHp.Blue4;
+            DataManager.Instance.stateData.enemyRobots.Data[RobotType.Infantry5].HP = isEnemyRedSide ? gameRobotHp.Red5 : gameRobotHp.Blue5;
+            DataManager.Instance.stateData.enemyRobots.Data[RobotType.Sentry].HP = isEnemyRedSide ? gameRobotHp.Red7 : gameRobotHp.Blue7;
+            DataManager.Instance.stateData.enemyFacilities.Data[RobotType.Outpost].HP = isEnemyRedSide ? gameRobotHp.RedOutpost : gameRobotHp.BlueOutpost;
+            DataManager.Instance.stateData.enemyFacilities.Data[RobotType.Base].HP = isEnemyRedSide ? gameRobotHp.RedBase : gameRobotHp.BlueBase;
+            DataManager.Instance.stateData.allieRobots.Data[RobotType.Hero].HP = isEnemyRedSide ? gameRobotHp.Blue1 : gameRobotHp.Red1;
+            DataManager.Instance.stateData.allieRobots.Data[RobotType.Engineer].HP = isEnemyRedSide ? gameRobotHp.Blue2 : gameRobotHp.Red2;
+            DataManager.Instance.stateData.allieRobots.Data[RobotType.Infantry3].HP = isEnemyRedSide ? gameRobotHp.Blue3 : gameRobotHp.Red3;
+            DataManager.Instance.stateData.allieRobots.Data[RobotType.Infantry4].HP = isEnemyRedSide ? gameRobotHp.Blue4 : gameRobotHp.Red4;
+            DataManager.Instance.stateData.allieRobots.Data[RobotType.Infantry5].HP = isEnemyRedSide ? gameRobotHp.Blue5 : gameRobotHp.Red5;
+            DataManager.Instance.stateData.allieRobots.Data[RobotType.Sentry].HP = isEnemyRedSide ? gameRobotHp.Blue7 : gameRobotHp.Red7;
+            DataManager.Instance.stateData.allieFacilities.Data[RobotType.Outpost].HP = isEnemyRedSide ? gameRobotHp.BlueOutpost : gameRobotHp.RedOutpost;
+            DataManager.Instance.stateData.allieFacilities.Data[RobotType.Base].HP = isEnemyRedSide ? gameRobotHp.BlueBase : gameRobotHp.RedBase;
+        }
+
+        private void getRadarStatus(byte[] data)
+        {
+            IntPtr dataPtr = Marshal.UnsafeAddrOfPinnedArrayElement(data, 0);
+            RadarInfo radarInfo = Marshal.PtrToStructure<RadarInfo>(dataPtr);
+            LogManager.Instance.log("[SerialHandler] <0x020E> RadarStatus: " +
+                "DoubleDebuffChances: " + radarInfo.DoubleDebuffChances.ToString() +
+                ",IsDoubleDebuffAble: " + radarInfo.IsDoubleDebuffAble.ToString());
+        }
+
+        private void getGameBuff(byte[] data)
+        {
+            IntPtr dataPtr = Marshal.UnsafeAddrOfPinnedArrayElement(data, 0);
+            EventData gameBuff = Marshal.PtrToStructure<EventData>(dataPtr);
+            LogManager.Instance.log("[SerialHandler] <0x0101> GameBuff: " +
+                "IsSupplyAreaOccupied: " + gameBuff.IsSupplyAreaOccupied.ToString() +
+                ", IsSupplyAreaOccupied2: " + gameBuff.IsSupplyAreaOccupied2.ToString() +
+                ", IsSupplyAreaOccupied3: " + gameBuff.IsSupplyAreaOccupied3.ToString() +
+                ", IsLittleEnergyOrganActivated: " + gameBuff.IsLittleEnergyOrganActivated.ToString() +
+                ", IsBigEnergyOrganActivated: " + gameBuff.IsBigEnergyOrganActivated.ToString() +
+                ", IsCentralHighlandOccupied: " + gameBuff.IsCentralHighlandOccupied.ToString() +
+                ", IsTrapezoidalHighlandOccupied: " + gameBuff.IsTrapezoidalHighlandOccupied.ToString() +
+                ", EnemyDartHitTime: " + gameBuff.EnemyDartHitTime.ToString() +
+                ", EnemyDartHitTarget: " + gameBuff.EnemyDartHitTarget.ToString() +
+                ", CenterGainPointStatus: " + gameBuff.CenterGainPointStatus.ToString());
+        }
+
+        private void getAlliedRobotInfo(byte[] data)
+        {
+            // TODO: Implement this function
+        }
+
+
         private void OnDestroy()
         {
-            ClosePort();
+            StopAllCoroutines();
+            if (receiveThread_ != null && receiveThread_.IsAlive)
+            {
+                receiveThread_.Abort();
+                receiveThread_ = null;
+            }
+            if (current_sp_ != null)
+            {
+                current_sp_.Close();
+                current_sp_.Dispose();
+                current_sp_ = null;
+            }
         }
+
     }
 
 }
