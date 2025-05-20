@@ -8,6 +8,7 @@ using System.Collections.Concurrent;
 using radar.serial.package;
 using System.Runtime.InteropServices;
 using radar.serial;
+using radar.ui.panel;
 
 namespace radar.data
 {
@@ -29,15 +30,17 @@ namespace radar.data
                 return instance_;
             }
         }
+        private static DataManager instance_;
+
         public ConcurrentQueue<StateDatas> updatedStateQueue = new ConcurrentQueue<StateDatas>();
         public event Action<StateDatas> OnDataUpdated;
-        public ref StateDatas stateData => ref stateData_;    // Read-only property to access the state data
-        public float sendFrequencyHz = 10f;
-        private static DataManager instance_;
+        public event Action<int> OnDoubleDebuffChancesEnabled;
         private StateDatas stateData_ = new();
+        public ref StateDatas stateData => ref stateData_;    // Read-only property to access the state data
+
+        public float sendFrequencyHz = 10f;
         private bool isDataUpdated_ = false;
         private int doubleDebuffActivedTimes = 0;
-
         public DateTime lastRecordTime = DateTime.Now;
         public int lastRecordTimeSeconds = 0;
         public void Start()
@@ -97,10 +100,12 @@ namespace radar.data
                     robotState.Value.IsTracked = false;
                     robotState.Value.Position = new Vector2(11.25f, 5.3f);
                     isDataUpdated_ = true;
+                    continue;
                 }
 
-                // TODO: Using Kalman filter to smooth the position data 
+                // TODO: Predict or flilter
             }
+
         }
 
         private void SendDoubleDebuffCmd()
@@ -129,11 +134,11 @@ namespace radar.data
             Marshal.Copy(ptr, dataToSend, 0, Marshal.SizeOf(typeof(RobotInteraction_Radar)));
             Marshal.FreeHGlobal(ptr);
 
-            Debug.Log($"[DataManager]Send byte data to send: {BitConverter.ToString(dataToSend)}");
-
             SerialHandler.Instance.SendData(0x0301, dataToSend);
 
             LogManager.Instance.log($"[DataManager]Send double debuff command:{doubleDebuffActivedTimes}");
+
+            OnDoubleDebuffChancesEnabled?.Invoke(doubleDebuffActivedTimes);
         }
 
         private void SendRobotPositionData()

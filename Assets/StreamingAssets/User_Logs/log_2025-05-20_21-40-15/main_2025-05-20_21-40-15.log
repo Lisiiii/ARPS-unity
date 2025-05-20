@@ -1,0 +1,7 @@
+--- Log File Created: 2025-05-20 21:40:15.047 ---
+[2025-05-20 21:40:15.166]<DEBUG> [Detector]Robot Inferencer initializing...
+[2025-05-20 21:40:15.169]<DEBUG> [Yolov8Inferencer]Model loaded: car_v8n
+[2025-05-20 21:40:15.173]<DEBUG> [Yolov8Inferencer]Model class count: 1
+[2025-05-20 21:40:18.296]<DEBUG> [Detector]Robot Inferencer initializing...
+[2025-05-20 21:40:18.297]<DEBUG> [Yolov8Inferencer]Model loaded: car_v8n
+[2025-05-20 21:40:18.299]<DEBUG> [Yolov8Inferencer]Model class count: 1

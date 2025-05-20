@@ -1,5 +1,0 @@
----Yolov8Inferencer Log File Created: 2025-05-20 06:20:58.114 ---
-[2025-05-20 06:20:58.112]<DEBUG> [Yolov8Inferencer]Model loaded: car_v8n
-[2025-05-20 06:20:58.115]<DEBUG> [Yolov8Inferencer]Model class count: 1
-[2025-05-20 06:20:58.116]<DEBUG> [Yolov8Inferencer]Model loaded: armor_v8n
-[2025-05-20 06:20:58.117]<DEBUG> [Yolov8Inferencer]Model class count: 12

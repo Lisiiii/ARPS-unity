@@ -138,7 +138,7 @@ namespace radar.ui.panel
             private Slider RobotHp;
             public void SetRobotName(string name)
             {
-                RobotName.text = radar.data.RobotName.Chinese[Enum.Parse<RobotType>(name)];
+                RobotName.text = name;
             }
             public void SetRobotNumber(int number, Team team)
             {
@@ -267,6 +267,55 @@ namespace radar.ui.panel
     };
     #endregion
 
+    #region TOPBAR_VIEW
+    public class TopBarViewType
+    {
+        public class HPBarType
+        {
+            public Transform HPBarRoot;
+            public TextMeshProUGUI BaseHPText;
+            public TextMeshProUGUI OutpostHPText;
+            public Slider BaseHPSlider;
+            public Slider OutpostHPSlider;
+            public HPBarType(Transform root, Team team)
+            {
+                HPBarRoot = root.transform.Find("TopBarView/" + (team == Team.Blue ? "Blue" : "Red"));
+                BaseHPText = HPBarRoot.Find("BaseHPText").GetComponent<TextMeshProUGUI>();
+                OutpostHPText = HPBarRoot.Find("OutpostHPText").GetComponent<TextMeshProUGUI>();
+                BaseHPSlider = HPBarRoot.Find("BaseHPSlider").GetComponent<Slider>();
+                OutpostHPSlider = HPBarRoot.Find("OutpostHPSlider").GetComponent<Slider>();
+                BaseHPSlider.maxValue = 5000;
+                OutpostHPSlider.maxValue = 1500;
+            }
+
+            public void SetBaseHP(float hp)
+            {
+                BaseHPSlider.value = hp;
+                BaseHPText.text = hp.ToString() + "/" + BaseHPSlider.maxValue.ToString();
+            }
+
+            public void SetOutpostHP(float hp)
+            {
+                OutpostHPSlider.value = hp;
+                OutpostHPText.text = hp.ToString() + "/" + OutpostHPSlider.maxValue.ToString();
+            }
+        }
+
+        public Transform TopBarViewRoot;
+        public HPBarType BlueHPBar;
+        public HPBarType RedHPBar;
+        public TopBarViewType(Transform rootTransform)
+        {
+            TopBarViewRoot = rootTransform;
+            BlueHPBar = new HPBarType(TopBarViewRoot, Team.Blue);
+            RedHPBar = new HPBarType(TopBarViewRoot, Team.Red);
+            BlueHPBar.SetBaseHP(5000);
+            BlueHPBar.SetOutpostHP(1500);
+            RedHPBar.SetBaseHP(5000);
+            RedHPBar.SetOutpostHP(1500);
+        }
+    };
+    #endregion
 
 
     public class MainUI : Panel
@@ -275,11 +324,10 @@ namespace radar.ui.panel
         InfoBarViewType InfoBarView;
         SwitchButtonViewType SwitchButtonView;
         RawCameraViewType RawCameraView;
+        TopBarViewType TopBarView;
         public GameObject robotPrefab_;
-        public GameObject minimap_;
+        // public GameObject minimap_;
         private Dictionary<RobotType, GameObject> robotList_;
-
-        private System.DateTime initialTime;
         private float countdownTime = 7 * 60;
         public override void Initialize()
         {
@@ -288,15 +336,19 @@ namespace radar.ui.panel
             InfoBarView = new InfoBarViewType(MainPanelCanvasRoot.transform);
             SwitchButtonView = new SwitchButtonViewType(MainPanelCanvasRoot.transform);
             RawCameraView = new RawCameraViewType(MainPanelCanvasRoot.transform);
+            TopBarView = new TopBarViewType(MainPanelCanvasRoot.transform);
 
-            minimap_ = GameObject.FindGameObjectWithTag("Minimap");
+            // minimap_ = GameObject.FindGameObjectWithTag("Minimap");
             robotPrefab_ = Resources.Load<GameObject>("Prefab/Robot");
-
-            initialTime = System.DateTime.Now.AddMinutes(7);
 
             DataManager.Instance.OnDataUpdated += UpdateRobotPosition;
             DataManager.Instance.OnDataUpdated += UpdateGameState;
             DataManager.Instance.OnDataUpdated += UpdateGameTime;
+            DataManager.Instance.OnDoubleDebuffChancesEnabled += (chance) =>
+            {
+                if (chance > 0)
+                    InfoBarView.TerminalBar.SetTerminalContent($"双倍易伤第{chance}次开启 ");
+            };
         }
         public override void Update()
         {
@@ -305,7 +357,6 @@ namespace radar.ui.panel
 
         private void UpdateGameTime(StateDatas stateDatas)
         {
-            // countdownTime = (float)(initialTime - System.DateTime.Now).TotalSeconds;
             countdownTime = stateDatas.gameState.GameTimeSeconds;
             if (countdownTime < 0)
                 countdownTime = 0;
@@ -326,9 +377,16 @@ namespace radar.ui.panel
             {
                 robot.Value.SetRobotHp(state.enemyRobots.Data[robot.Key].HP, state.gameState.EnemySide);
                 robot.Value.SetRobotNumber((int)robot.Key, state.gameState.EnemySide);
-                robot.Value.SetRobotName(robot.Key.ToString());
+                robot.Value.SetRobotName(RobotName.Chinese[robot.Key]);
                 robot.Value.SetRobotState(state.enemyRobots.Data[robot.Key].IsTracked);
             }
+
+            RobotSets blueFacilities = state.gameState.EnemySide == Team.Blue ? state.enemyFacilities : state.allieFacilities;
+            RobotSets redFacilities = state.gameState.EnemySide == Team.Red ? state.enemyFacilities : state.allieFacilities;
+            TopBarView.BlueHPBar.SetBaseHP(blueFacilities.Data[RobotType.Base].HP);
+            TopBarView.BlueHPBar.SetOutpostHP(blueFacilities.Data[RobotType.Outpost].HP);
+            TopBarView.RedHPBar.SetBaseHP(redFacilities.Data[RobotType.Base].HP);
+            TopBarView.RedHPBar.SetOutpostHP(redFacilities.Data[RobotType.Outpost].HP);
         }
 
         private void UpdateRobotPosition(StateDatas stateData)
@@ -347,7 +405,7 @@ namespace radar.ui.panel
                     if (unInstantiatedRobots.Contains(robotState.Key)) continue;
 
                     GameObject robot = Instantiate(robotPrefab_);
-                    robotPrefab_.name = robotState.Key.ToString();
+                    robotPrefab_.name = RobotName.Chinese[robotState.Key];
                     robot.transform.Find("Cylinder").GetComponent<Renderer>().material.color = stateData.gameState.EnemySide == Team.Blue ? Color.blue : Color.red;
                     if (robotState.Key == RobotType.Unkown)
                         robot.transform.Find("Cylinder").GetComponent<Renderer>().material.color = Color.gray;
@@ -357,14 +415,15 @@ namespace radar.ui.panel
             }
             foreach (var robotState in stateData.enemyRobots.Data)
             {
-                Vector3 robotPosition;
-                if (!robotState.Value.IsTracked)
-                    robotPosition = new Vector3(0, minimap_.transform.position.y + 0.2f, 0);
-                else
-                    robotPosition = new Vector3(robotState.Value.Position.x, minimap_.transform.position.y + 0.2f, robotState.Value.Position.y);
+                Vector3 robotPosition = new Vector3(robotState.Value.Position.x, robotState.Value.Position.z + 0.2f, robotState.Value.Position.y);
                 robotList_[robotState.Key].transform.position = robotPosition;
                 robotList_[robotState.Key].transform.Find("Cylinder").GetComponent<Renderer>().material.color = stateData.gameState.EnemySide == Team.Blue ? Color.blue : Color.red;
             }
+        }
+
+        public void UpdateTerminalContent(string text)
+        {
+            InfoBarView.TerminalBar.SetTerminalContent(text);
         }
 
         public void OnDestroy()

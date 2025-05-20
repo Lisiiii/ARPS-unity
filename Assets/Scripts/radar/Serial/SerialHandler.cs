@@ -98,8 +98,6 @@ namespace radar.serial
                 return;
 
             byte[] dataToSend = packageData(commandId, data);
-            Debug.Log($"[SerialHandler]SendData: {commandId:X4} - {BitConverter.ToString(dataToSend).Replace("-", " ")}");
-
             try
             {
                 if (current_sp_.IsOpen)

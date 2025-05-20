@@ -18,9 +18,11 @@ namespace radar.Yolov8
         private Unity.InferenceEngine.Tensor<float> outputTensor_ = null;
         private Unity.InferenceEngine.Tensor<float> inputTensor_ = null;
         private int classCount_; // Number of classes in model
-        private Texture2D inputTexture_ = new Texture2D(1920, 1080, TextureFormat.RGB24, false);
-        public Yolov8Inferencer(Unity.InferenceEngine.ModelAsset inferenceModel, int classCount = 1)
+        private Vector2Int inputSize_ = new Vector2Int(640, 640); // Input size of the model
+        private Texture2D inputTexture_;
+        public Yolov8Inferencer(Unity.InferenceEngine.ModelAsset inferenceModel, int classCount = 1, Vector2Int inputSize = default)
         {
+            inputSize_ = inputSize == default ? new Vector2Int(640, 640) : inputSize;
             classCount_ = classCount;
             worker_ = new Unity.InferenceEngine.Worker(Unity.InferenceEngine.ModelLoader.Load(inferenceModel), Unity.InferenceEngine.BackendType.GPUCompute);
 
@@ -34,7 +36,9 @@ namespace radar.Yolov8
             inputTexture_ = inputTexture;
             if (!inferencePending_)
             {
-                inputTensor_ = Unity.InferenceEngine.TextureConverter.ToTensor(inputTexture, width: 640, height: 640);
+                inputTensor_ = new Unity.InferenceEngine.Tensor<float>(new Unity.InferenceEngine.TensorShape(1, 3, inputSize_.x, inputSize_.y));
+                Unity.InferenceEngine.TextureConverter.ToTensor(inputTexture, inputTensor_);
+
                 worker_.Schedule(inputTensor_);
                 outputTensor_ = worker_.PeekOutput("output0") as Unity.InferenceEngine.Tensor<float>;
                 outputTensor_.ReadbackRequest();

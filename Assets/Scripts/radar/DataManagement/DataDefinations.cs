@@ -11,16 +11,18 @@ namespace radar.data
     {
         public static readonly Dictionary<RobotType, string> Chinese = new Dictionary<RobotType, string>
         {
-            { RobotType.Hero, "英雄机器人" },
-            { RobotType.Engineer, "工程机器人" },
-            { RobotType.Infantry3, "步兵机器人3" },
-            { RobotType.Infantry4, "步兵机器人4" },
-            { RobotType.Infantry5, "步兵机器人5" },
-            { RobotType.Sentry, "哨兵机器人" },
+            { RobotType.Hero, "英雄" },
+            { RobotType.Engineer, "工程" },
+            { RobotType.Infantry3, "步兵3" },
+            { RobotType.Infantry4, "步兵4" },
+            { RobotType.Infantry5, "步兵5" },
+            { RobotType.Sentry, "哨兵" },
             { RobotType.Dart, "飞镖" },
             { RobotType.Drone, "无人机" },
             { RobotType.Outpost, "前哨站" },
-            { RobotType.Base, "基地" }
+            { RobotType.Base, "基地" },
+            { RobotType.Unkown, "未知" }
+
         };
 
         public static readonly Dictionary<RobotType, string> English = new Dictionary<RobotType, string>
@@ -34,7 +36,8 @@ namespace radar.data
             { RobotType.Dart, "Dart" },
             { RobotType.Drone, "Drone" },
             { RobotType.Outpost, "Outpost" },
-            { RobotType.Base, "Base" }
+            { RobotType.Base, "Base" },
+            { RobotType.Unkown, "Unknown" }
         };
     }
     public enum Team { Blue, Red }
@@ -54,17 +57,17 @@ namespace radar.data
     }
 
 
-    public class Robot
+    public class RobotSets
     {
         public class RobotState
         {
             public bool IsTracked;
-            public Vector2 Position;
+            public Vector3 Position;
             public DateTime LastUpdateTime;
             public int HP;
         }
         public Dictionary<RobotType, RobotState> Data;
-        public Robot(List<RobotType> robotTypes = null)
+        public RobotSets(List<RobotType> robotTypes = null)
         {
             Data = new Dictionary<RobotType, RobotState>();
             if (robotTypes != null)
@@ -117,18 +120,18 @@ namespace radar.data
     }
     public class StateDatas
     {
-        public Robot enemyRobots;
-        public Robot allieRobots;
-        public Robot enemyFacilities;
-        public Robot allieFacilities;
+        public RobotSets enemyRobots;
+        public RobotSets allieRobots;
+        public RobotSets enemyFacilities;
+        public RobotSets allieFacilities;
         public RadarInfo radarInfo;
         public GameState gameState;
         public StateDatas()
         {
-            enemyRobots = new Robot(new List<RobotType> { RobotType.Hero, RobotType.Engineer, RobotType.Infantry3, RobotType.Infantry4, RobotType.Infantry5, RobotType.Sentry, RobotType.Unkown });
-            allieRobots = new Robot(new List<RobotType> { RobotType.Hero, RobotType.Engineer, RobotType.Infantry3, RobotType.Infantry4, RobotType.Infantry5, RobotType.Sentry, RobotType.Unkown });
-            enemyFacilities = new Robot(new List<RobotType> { RobotType.Dart, RobotType.Drone, RobotType.Outpost, RobotType.Base });
-            allieFacilities = new Robot(new List<RobotType> { RobotType.Dart, RobotType.Drone, RobotType.Outpost, RobotType.Base });
+            enemyRobots = new RobotSets(new List<RobotType> { RobotType.Hero, RobotType.Engineer, RobotType.Infantry3, RobotType.Infantry4, RobotType.Infantry5, RobotType.Sentry, RobotType.Unkown });
+            allieRobots = new RobotSets(new List<RobotType> { RobotType.Hero, RobotType.Engineer, RobotType.Infantry3, RobotType.Infantry4, RobotType.Infantry5, RobotType.Sentry, RobotType.Unkown });
+            enemyFacilities = new RobotSets(new List<RobotType> { RobotType.Dart, RobotType.Drone, RobotType.Outpost, RobotType.Base });
+            allieFacilities = new RobotSets(new List<RobotType> { RobotType.Dart, RobotType.Drone, RobotType.Outpost, RobotType.Base });
             gameState = new GameState { GameStage = GameStage.NotStarted, GameTimeSeconds = 0, GameCount = 0, EnemySide = Team.Blue };
             radarInfo = new RadarInfo { DoubleDebuffChances = 0, IsDoubleDebuffAble = false };
         }

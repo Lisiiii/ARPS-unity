@@ -1,0 +1,34 @@
+--- Log File Created: 2025-05-20 21:41:05.668 ---
+[2025-05-20 21:41:06.063]<DEBUG> [Detector]Robot Inferencer initializing...
+[2025-05-20 21:41:06.066]<DEBUG> [Yolov8Inferencer]Model loaded: car_v8n
+[2025-05-20 21:41:06.070]<DEBUG> [Yolov8Inferencer]Model class count: 1
+[2025-05-20 21:41:06.071]<DEBUG> [Yolov8Inferencer]Model loaded: armor_v8n
+[2025-05-20 21:41:06.072]<DEBUG> [Yolov8Inferencer]Model class count: 12
+[2025-05-20 21:41:06.073]<DEBUG> [Yolov8Inferencer]Model loaded: armor_v8n
+[2025-05-20 21:41:06.074]<DEBUG> [Yolov8Inferencer]Model class count: 12
+[2025-05-20 21:41:06.075]<DEBUG> [Yolov8Inferencer]Model loaded: armor_v8n
+[2025-05-20 21:41:06.076]<DEBUG> [Yolov8Inferencer]Model class count: 12
+[2025-05-20 21:41:06.077]<DEBUG> [Yolov8Inferencer]Model loaded: armor_v8n
+[2025-05-20 21:41:06.078]<DEBUG> [Yolov8Inferencer]Model class count: 12
+[2025-05-20 21:41:06.079]<DEBUG> [Yolov8Inferencer]Model loaded: armor_v8n
+[2025-05-20 21:41:06.080]<DEBUG> [Yolov8Inferencer]Model class count: 12
+[2025-05-20 21:41:06.082]<DEBUG> [Yolov8Inferencer]Model loaded: armor_v8n
+[2025-05-20 21:41:06.083]<DEBUG> [Yolov8Inferencer]Model class count: 12
+[2025-05-20 21:41:06.084]<DEBUG> [Yolov8Inferencer]Model loaded: armor_v8n
+[2025-05-20 21:41:06.085]<DEBUG> [Yolov8Inferencer]Model class count: 12
+[2025-05-20 21:41:06.086]<DEBUG> [Yolov8Inferencer]Model loaded: armor_v8n
+[2025-05-20 21:41:06.086]<DEBUG> [Yolov8Inferencer]Model class count: 12
+[2025-05-20 21:41:06.087]<DEBUG> [Yolov8Inferencer]Model loaded: armor_v8n
+[2025-05-20 21:41:06.088]<DEBUG> [Yolov8Inferencer]Model class count: 12
+[2025-05-20 21:41:06.089]<DEBUG> [Yolov8Inferencer]Model loaded: armor_v8n
+[2025-05-20 21:41:06.090]<DEBUG> [Yolov8Inferencer]Model class count: 12
+[2025-05-20 21:41:06.091]<DEBUG> [Yolov8Inferencer]Model loaded: armor_v8n
+[2025-05-20 21:41:06.092]<DEBUG> [Yolov8Inferencer]Model class count: 12
+[2025-05-20 21:41:06.093]<DEBUG> [Yolov8Inferencer]Model loaded: armor_v8n
+[2025-05-20 21:41:06.094]<DEBUG> [Yolov8Inferencer]Model class count: 12
+[2025-05-20 21:41:06.096]<DEBUG> [Detector]initialized.
+[2025-05-20 21:41:10.048]<DEBUG> [Detector]Robot Inferencer initializing...
+[2025-05-20 21:41:10.050]<DEBUG> [Yolov8Inferencer]Model loaded: car_v8n
+[2025-05-20 21:41:10.051]<DEBUG> [Yolov8Inferencer]Model class count: 1
+[2025-05-20 21:41:10.052]<DEBUG> [Detector]initialized.
+[2025-05-20 21:41:10.053]<DEBUG> [Detector]Detection started.

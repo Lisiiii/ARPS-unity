@@ -16,13 +16,13 @@ PlayerSettings:
   productName: ARPS
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
-  m_SplashScreenBackgroundColor: {r: 0.8117648, g: 0.909804, b: 0.7843138, a: 1}
+  m_SplashScreenBackgroundColor: {r: 1, g: 1, b: 1, a: 1}
   m_ShowUnitySplashScreen: 1
   m_ShowUnitySplashLogo: 0
   m_SplashScreenOverlayOpacity: 0
-  m_SplashScreenAnimation: 0
-  m_SplashScreenLogoStyle: 1
-  m_SplashScreenDrawMode: 1
+  m_SplashScreenAnimation: 1
+  m_SplashScreenLogoStyle: 0
+  m_SplashScreenDrawMode: 0
   m_SplashScreenBackgroundAnimationZoom: 1
   m_SplashScreenLogoAnimationZoom: 1
   m_SplashScreenBackgroundLandscapeAspect: 1
@@ -40,7 +40,7 @@ PlayerSettings:
     width: 1
     height: 1
   m_SplashScreenLogos:
-  - logo: {fileID: 21300000, guid: faf169591cc838c44818e3b3d44ebbc1, type: 3}
+  - logo: {fileID: 21300000, guid: d1a7cbdc2fe2fbe49857b39f0158893b, type: 3}
     duration: 2
   m_VirtualRealitySplashScreen: {fileID: 0}
   m_HolographicTrackingLossScreen: {fileID: 0}
@@ -302,7 +302,7 @@ PlayerSettings:
   - m_BuildTarget: Standalone
     m_Icons:
     - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: e09b1db8105a77d438fb6909b0a5c308, type: 3}
+      m_Icon: {fileID: 2800000, guid: 141b5538b662fe54bb382f27ae5dfbd0, type: 3}
       m_Width: 1024
       m_Height: 1024
       m_Kind: 0
