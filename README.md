@@ -8,6 +8,11 @@
 Automatic Radar Positioning System based on Unity
 
 ---
+
+- 5.22 - Update
+
+  添加多相机支持
+
 - 🎈 预览
 
 <image src="https://github.com/user-attachments/assets/93acbfde-9e41-4c4a-beae-6dc43a1b6c7d" align="center" height="200"/>
@@ -21,6 +26,8 @@ Automatic Radar Positioning System based on Unity
   - 单目相机读取
     
   - 机器人目标和装甲板分类识别（基于Unity的InferenceEngine和Ultralytics的Yolov8_onnx）
+
+  - 多相机同时读取和识别
     
   - 机器人精确坐标定位
     
@@ -34,8 +41,6 @@ Automatic Radar Positioning System based on Unity
     
 - 🛠 TODO: 
   - 写入/读取配置参数
- 
-  - 多相机支持
     
   - 相机自动标定
     
