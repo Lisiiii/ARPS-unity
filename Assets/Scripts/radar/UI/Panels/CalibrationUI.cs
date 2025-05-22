@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using radar.webcamera;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Windows.WebCam;
 namespace radar.ui.panel
 {
     struct CalibrationType
@@ -17,13 +19,12 @@ namespace radar.ui.panel
     {
         Canvas CollaborationPanelCanvasRoot_;
         CalibrationType CalibrationView_;
-        public RenderTexture raycastCameraTexture_;
-        public Camera raycastCamera_;
+        public Camera currentCamera_;
         public bool isCalibrationViewEnabled_ = false;
         public override void Initialize()
         {
             CollaborationPanelCanvasRoot_ = GetComponent<Canvas>();
-            raycastCamera_ = GameObject.Find("RayCastCamera").GetComponent<Camera>();
+            currentCamera_ = WebCameraHandler.Instance.selectedCamera_.raycastCamera_;
             CalibrationView_ = new CalibrationType
             {
                 CallibrationViewRoot = CollaborationPanelCanvasRoot_.transform.Find("CalibrationView"),
@@ -36,8 +37,16 @@ namespace radar.ui.panel
                 UIManager.HidePanel<CalibrationUI>();
                 setCameraViewEnabled(false);
             });
-            CalibrationView_.CameraView.texture = raycastCameraTexture_;
+            CalibrationView_.CameraView.texture = WebCameraHandler.Instance.selectedCamera_.cameraTexture_;
             setCameraViewEnabled(false);
+
+            WebCameraHandler.Instance.OnSelectedCameraChanged += UpdateCamera;
+        }
+        public void UpdateCamera()
+        {
+            if (WebCameraHandler.Instance.selectedCamera_ == null) return;
+            CalibrationView_.CameraView.texture = WebCameraHandler.Instance.selectedCamera_.cameraTexture_;
+            currentCamera_ = WebCameraHandler.Instance.selectedCamera_.raycastCamera_;
         }
         public void setCameraViewEnabled(bool enable)
         {
@@ -101,9 +110,9 @@ namespace radar.ui.panel
                                      Vector3.forward * isKeyPressed(KeyCode.Z) +
                                      Vector3.back * isKeyPressed(KeyCode.X);
 
-            raycastCamera_.transform.Translate(moveDirection * moveSpeed_ * speedScale_, Space.Self);
-            raycastCamera_.transform.Rotate(rotateDirection * rotateSpeed_ * speedScale_, Space.Self);
-            raycastCamera_.fieldOfView += (isKeyPressed(KeyCode.Q) - isKeyPressed(KeyCode.E)) * 0.1f * speedScale_;
+            currentCamera_.transform.Translate(moveDirection * moveSpeed_ * speedScale_, Space.Self);
+            currentCamera_.transform.Rotate(rotateDirection * rotateSpeed_ * speedScale_, Space.Self);
+            currentCamera_.fieldOfView += (isKeyPressed(KeyCode.Q) - isKeyPressed(KeyCode.E)) * 0.1f * speedScale_;
         }
     }
 }

@@ -9,6 +9,7 @@ using System;
 using NUnit.Framework;
 using System.Collections;
 using UnityEngine.Rendering;
+using radar.webcamera;
 
 namespace radar.detector
 {
@@ -24,12 +25,27 @@ namespace radar.detector
     }
     public class Detector : MonoBehaviour
     {
+        public static Detector Instance
+        {
+            get
+            {
+                if (instance_ == null)
+                {
+                    instance_ = FindAnyObjectByType<Detector>();
+                    if (instance_ == null)
+                    {
+                        GameObject obj = new GameObject("Detector");
+                        instance_ = obj.AddComponent<Detector>();
+                    }
+                }
+                return instance_;
+            }
+        }
+        private static Detector instance_;
         public Unity.InferenceEngine.ModelAsset robotModelAsset_;
         public Unity.InferenceEngine.ModelAsset armorModelAsset_;
         public int robotClassCount_ = 1;
         public int armorClassCount_ = 12;
-        public RenderTexture inputTexture_;
-        public Camera rayCastCamera_;
         public bool ifInference_ = false;
         private Yolov8Inferencer robotInferencer_;
 
@@ -38,7 +54,6 @@ namespace radar.detector
             to be blocked by last armor inferencing.
         */
         private List<Yolov8Inferencer> armorInferencerList_;
-        private Texture2D rawTexture_;
         private Dictionary<int, List<BoundingBox>> inferenceResults_;
         void Start()
         {
@@ -57,7 +72,6 @@ namespace radar.detector
                     armorInferencerList_.Add(new Yolov8Inferencer(armorModelAsset_, armorClassCount_));
             }
 
-            rawTexture_ = new Texture2D(inputTexture_.width, inputTexture_.height, TextureFormat.RGBA32, false);
             inferenceResults_ = new Dictionary<int, List<BoundingBox>>();
 
             LogManager.Instance.log("[Detector]initialized.");
@@ -65,18 +79,7 @@ namespace radar.detector
 
         void Update()
         {
-            RenderTexture.active = inputTexture_;
-            AsyncGPUReadback.Request(inputTexture_, 0, TextureFormat.RGBA32, request =>
-            {
-                if (!request.hasError)
-                {
-                    var data = request.GetData<byte>();
-                    if (data == null || data.Length == 0 || rawTexture_ == null)
-                        return;
-                    rawTexture_.LoadRawTextureData(data);
-                    rawTexture_.Apply();
-                }
-            });
+
         }
 
 
@@ -86,13 +89,13 @@ namespace radar.detector
             if (ifInference_)
             {
                 Initialize();
-                StartCoroutine(nameof(Detection));
+                StartCoroutine(nameof(DetectionLoop));
 
                 LogManager.Instance.log("[Detector]Detection started.");
             }
             else
             {
-                StopCoroutine(nameof(Detection));
+                StopAllCoroutines();
                 robotInferencer_.Dispose();
                 robotInferencer_ = null;
                 foreach (var armorInferencer in armorInferencerList_)
@@ -104,49 +107,71 @@ namespace radar.detector
             }
         }
 
-        IEnumerator Detection()
+
+        IEnumerator DetectionLoop()
         {
-            Dictionary<int, List<BoundingBox>> robotResults;
             while (true)
             {
-                inferenceResults_.Clear();
-                robotResults = null;
-                yield return new WaitUntil(() =>
+                if (WebCameraHandler.Instance.raycastCameras_ == null || WebCameraHandler.Instance.raycastCameras_.Count == 0)
                 {
-                    robotResults = robotInferencer_.inference(rawTexture_, 0.1f, 0.2f);
-                    return robotResults != null;
-                });
-
-                if (robotResults.Count == 0)
-                {
-                    yield return new WaitForFixedUpdate();
-                    continue;
+                    StartCoroutine(nameof(Detection), WebCameraHandler.Instance.selectedCamera_);
                 }
-
-                bool[] isFinished = new bool[robotResults[0].Count];
-
-                for (int i = 0; i < robotResults[0].Count; i++)
-                {
-                    var robotBox = robotResults[0][i];
-                    StartCoroutine(ArmorDetectCoroutine(robotBox, i, isFinished));
-                }
-
-                yield return new WaitUntil(() => System.Array.TrueForAll(isFinished, x => x));
-
-                RayCast(inferenceResults_);
+                else
+                    foreach (var raycastCamera in WebCameraHandler.Instance.raycastCameras_)
+                    {
+                        StartCoroutine(nameof(Detection), raycastCamera);
+                    }
+                yield return new WaitForEndOfFrame();
             }
         }
+        IEnumerator Detection(RaycastCameraType raycastCameraData)
+        {
+            Texture2D inputTexture = raycastCameraData.outputTexture2D_;
+            Camera raycastCamera = raycastCameraData.raycastCamera_;
+            if (raycastCamera == null)
+                yield break;
 
-        IEnumerator ArmorDetectCoroutine(BoundingBox robotBox, int idx, bool[] finished)
+            Dictionary<int, List<BoundingBox>> robotResults;
+
+            if (inputTexture == null)
+                yield break;
+
+            inferenceResults_.Clear();
+            robotResults = null;
+            yield return new WaitUntil(() =>
+            {
+                robotResults = robotInferencer_.inference(inputTexture, 0.1f, 0.2f);
+                return robotResults != null;
+            });
+
+            if (robotResults.Count == 0)
+            {
+                yield return new WaitForFixedUpdate();
+                yield break;
+            }
+
+            bool[] isFinished = new bool[robotResults[0].Count];
+
+            for (int i = 0; i < robotResults[0].Count; i++)
+            {
+                var robotBox = robotResults[0][i];
+                StartCoroutine(ArmorDetection(robotBox, inputTexture, i, isFinished));
+            }
+
+            yield return new WaitUntil(() => System.Array.TrueForAll(isFinished, x => x));
+
+            RayCast(inferenceResults_, raycastCamera);
+        }
+        IEnumerator ArmorDetection(BoundingBox robotBox, Texture2D inputTexture, int idx, bool[] finished)
         {
             Vector2Int boxOrigin = new Vector2Int((int)robotBox.XMin, (int)robotBox.YMin);
             Vector2Int boxSize = new Vector2Int((int)(robotBox.XMax - robotBox.XMin), (int)(robotBox.YMax - robotBox.YMin));
-            boxOrigin.x = Mathf.Clamp(boxOrigin.x, 0, rawTexture_.width - 1);
-            boxOrigin.y = Mathf.Clamp(boxOrigin.y, 0, rawTexture_.height - 1);
-            boxSize.x = Mathf.Clamp(boxSize.x, 0, rawTexture_.width - boxOrigin.x - 1);
-            boxSize.y = Mathf.Clamp(boxSize.y, 0, rawTexture_.height - boxOrigin.y - 1);
+            boxOrigin.x = Mathf.Clamp(boxOrigin.x, 0, inputTexture.width - 1);
+            boxOrigin.y = Mathf.Clamp(boxOrigin.y, 0, inputTexture.height - 1);
+            boxSize.x = Mathf.Clamp(boxSize.x, 0, inputTexture.width - boxOrigin.x - 1);
+            boxSize.y = Mathf.Clamp(boxSize.y, 0, inputTexture.height - boxOrigin.y - 1);
 
-            Color[] m_Colors = rawTexture_.GetPixels(boxOrigin.x, boxOrigin.y, boxSize.x, boxSize.y);
+            Color[] m_Colors = inputTexture.GetPixels(boxOrigin.x, boxOrigin.y, boxSize.x, boxSize.y);
             Texture2D clipedTexture = new Texture2D(boxSize.x, boxSize.y, TextureFormat.RGB24, false);
             clipedTexture.SetPixels(m_Colors);
             clipedTexture.Apply();
@@ -192,9 +217,9 @@ namespace radar.detector
             finished[idx] = true;
         }
 
-        private void RayCast(Dictionary<int, List<BoundingBox>> inferenceResults)
+        private void RayCast(Dictionary<int, List<BoundingBox>> inferenceResults, Camera raycastCamera)
         {
-            if (inferenceResults.Count == 0) return;
+            if (inferenceResults.Count == 0 || raycastCamera == null) return;
             // 0-5 for blue, 6-11 for red
             Vector2Int classScale =
                 DataManager.Instance.stateData.gameState.EnemySide == Team.Blue ? new Vector2Int(0, 5) : new Vector2Int(6, 11);
@@ -211,7 +236,7 @@ namespace radar.detector
                          ((inferenceResults[classIndex][classCount].YMax - inferenceResults[classIndex][classCount].YMin) / 4))
                     );
 
-                    Ray ray = rayCastCamera_.ScreenPointToRay(centerPoint);
+                    Ray ray = raycastCamera.ScreenPointToRay(centerPoint);
                     RaycastHit hit;
                     if (Physics.Raycast(ray, out hit))
                     {

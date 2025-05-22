@@ -1,0 +1,14 @@
+---WebCameraHandler Log File Created: 2025-05-22 23:28:01.110 ---
+[2025-05-22 23:28:01.109]<DEBUG> [WebCameraHandler]Camera devices scanned: 2 devices found.
+[2025-05-22 23:28:01.112]<DEBUG> [WebCameraHandler]--- Camera device 0: DECXIN  CAMERA
+[2025-05-22 23:28:01.113]<DEBUG> [WebCameraHandler]--- Camera device 1: OBS Virtual Camera
+[2025-05-22 23:28:01.979]<DEBUG> [WebCameraHandler]DECXIN  CAMERA opened successfully.
+[2025-05-22 23:28:44.130]<DEBUG> [WebCameraHandler]Camera devices scanned: 3 devices found.
+[2025-05-22 23:28:44.131]<DEBUG> [WebCameraHandler]--- Camera device 0: DECXIN  CAMERA
+[2025-05-22 23:28:44.133]<DEBUG> [WebCameraHandler]--- Camera device 1: DECXIN  CAMERA 1
+[2025-05-22 23:28:44.134]<DEBUG> [WebCameraHandler]--- Camera device 2: OBS Virtual Camera
+[2025-05-22 23:28:54.736]<DEBUG> [WebCameraHandler]Camera devices scanned: 3 devices found.
+[2025-05-22 23:28:54.738]<DEBUG> [WebCameraHandler]--- Camera device 0: DECXIN  CAMERA
+[2025-05-22 23:28:54.739]<DEBUG> [WebCameraHandler]--- Camera device 1: DECXIN  CAMERA 1
+[2025-05-22 23:28:54.740]<DEBUG> [WebCameraHandler]--- Camera device 2: OBS Virtual Camera
+[2025-05-22 23:28:56.071]<DEBUG> [WebCameraHandler]DECXIN  CAMERA 1 opened successfully.

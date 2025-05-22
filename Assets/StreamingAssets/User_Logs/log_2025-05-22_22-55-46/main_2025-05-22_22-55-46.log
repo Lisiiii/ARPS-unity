@@ -1,0 +1,37 @@
+--- Log File Created: 2025-05-22 22:55:46.784 ---
+[2025-05-22 22:55:47.000]<DEBUG> [Detector]Robot Inferencer initializing...
+[2025-05-22 22:55:47.003]<DEBUG> [Yolov8Inferencer]Model loaded: car_v8n
+[2025-05-22 22:55:47.005]<DEBUG> [Yolov8Inferencer]Model class count: 1
+[2025-05-22 22:55:47.006]<DEBUG> [Yolov8Inferencer]Model loaded: armor_v8n
+[2025-05-22 22:55:47.007]<DEBUG> [Yolov8Inferencer]Model class count: 12
+[2025-05-22 22:55:47.008]<DEBUG> [Yolov8Inferencer]Model loaded: armor_v8n
+[2025-05-22 22:55:47.009]<DEBUG> [Yolov8Inferencer]Model class count: 12
+[2025-05-22 22:55:47.010]<DEBUG> [Yolov8Inferencer]Model loaded: armor_v8n
+[2025-05-22 22:55:47.011]<DEBUG> [Yolov8Inferencer]Model class count: 12
+[2025-05-22 22:55:47.013]<DEBUG> [Yolov8Inferencer]Model loaded: armor_v8n
+[2025-05-22 22:55:47.013]<DEBUG> [Yolov8Inferencer]Model class count: 12
+[2025-05-22 22:55:47.014]<DEBUG> [Yolov8Inferencer]Model loaded: armor_v8n
+[2025-05-22 22:55:47.015]<DEBUG> [Yolov8Inferencer]Model class count: 12
+[2025-05-22 22:55:47.016]<DEBUG> [Yolov8Inferencer]Model loaded: armor_v8n
+[2025-05-22 22:55:47.017]<DEBUG> [Yolov8Inferencer]Model class count: 12
+[2025-05-22 22:55:47.018]<DEBUG> [Yolov8Inferencer]Model loaded: armor_v8n
+[2025-05-22 22:55:47.018]<DEBUG> [Yolov8Inferencer]Model class count: 12
+[2025-05-22 22:55:47.019]<DEBUG> [Yolov8Inferencer]Model loaded: armor_v8n
+[2025-05-22 22:55:47.020]<DEBUG> [Yolov8Inferencer]Model class count: 12
+[2025-05-22 22:55:47.021]<DEBUG> [Yolov8Inferencer]Model loaded: armor_v8n
+[2025-05-22 22:55:47.021]<DEBUG> [Yolov8Inferencer]Model class count: 12
+[2025-05-22 22:55:47.022]<DEBUG> [Yolov8Inferencer]Model loaded: armor_v8n
+[2025-05-22 22:55:47.023]<DEBUG> [Yolov8Inferencer]Model class count: 12
+[2025-05-22 22:55:47.023]<DEBUG> [Yolov8Inferencer]Model loaded: armor_v8n
+[2025-05-22 22:55:47.024]<DEBUG> [Yolov8Inferencer]Model class count: 12
+[2025-05-22 22:55:47.025]<DEBUG> [Yolov8Inferencer]Model loaded: armor_v8n
+[2025-05-22 22:55:47.026]<DEBUG> [Yolov8Inferencer]Model class count: 12
+[2025-05-22 22:55:47.027]<DEBUG> [Detector]initialized.
+[2025-05-22 22:55:50.315]<DEBUG> [Detector]Robot Inferencer initializing...
+[2025-05-22 22:55:50.317]<DEBUG> [Detector]initialized.
+[2025-05-22 22:55:50.318]<DEBUG> [Detector]Detection started.
+[2025-05-22 22:55:51.352]<DEBUG> [Detector]Detection stopped.
+[2025-05-22 22:55:57.260]<DEBUG> [WebCameraHandler]Camera devices scanned: 2 devices found.
+[2025-05-22 22:55:57.264]<DEBUG> [WebCameraHandler]--- Camera device 0: DECXIN  CAMERA
+[2025-05-22 22:55:57.265]<DEBUG> [WebCameraHandler]--- Camera device 1: OBS Virtual Camera
+[2025-05-22 22:55:58.240]<DEBUG> [WebCameraHandler]DECXIN  CAMERA opened successfully.

@@ -6,6 +6,8 @@ using System.IO.Ports;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using radar.webcamera;
+using radar.data;
 
 namespace radar.ui.panel
 {
@@ -38,7 +40,6 @@ namespace radar.ui.panel
 
         Button SwitchToMainButton;
         serial.SerialHandler SerialHandler;
-        webcamera.WebCameraHandler WebCameraHandler;
         public override void Initialize()
         {
             IOHandlePanelCanvasRoot = GetComponent<Canvas>();
@@ -100,16 +101,16 @@ namespace radar.ui.panel
                 cameras = new string[0],
                 WebCameraSubmenuPrefab = Resources.Load<Transform>("Prefab/WebCameraSubmenu")
             };
-            WebCameraHandler = GameObject.Find("WebCameraHandler").transform.GetComponent<webcamera.WebCameraHandler>();
 
-            WebCameraHandler.OnCameraScanned += OnCameraScaned;
+            WebCameraHandler.Instance.OnCameraScanned += OnCameraScaned;
             WebCameraView.ScanButton.onClick.AddListener(() =>
             {
-                WebCameraHandler.ScanCamera();
+                WebCameraHandler.Instance.ScanCamera();
             });
             WebCameraView.CloseButton.onClick.AddListener(() =>
             {
-                WebCameraHandler.CloseCamera();
+                WebCameraHandler.Instance.CloseAllCamera();
+
             });
 
             AddWebCameraSubmenu();
@@ -168,14 +169,19 @@ namespace radar.ui.panel
                 {
                     try
                     {
-                        WebCameraHandler.OpenCamera(cameraName);
+                        if (WebCameraHandler.Instance.OpenCamera(cameraName))
+                            WebCameraView.Info.text = "已连接到 " + cameraName;
+                        else
+                            WebCameraView.Info.text = "连接失败";
                     }
                     catch (System.Exception e)
                     {
                         WebCameraView.Info.text = "连接失败" + e.ToString();
+                        LogManager.Instance.error("[WebCameraHandler]Open camera failed: " + e.ToString());
+                        Debug.LogError("[WebCameraHandler]Open camera failed: " + e.ToString());
                         return;
                     }
-                    WebCameraView.Info.text = "已连接到 " + cameraName;
+
                 });
             }
 

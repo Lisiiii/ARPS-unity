@@ -1,18 +1,13 @@
-using radar.Yolov8;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using radar.detector;
-using System;
-using Unity.VisualScripting;
 using radar.data;
 using System.Collections.Generic;
+using radar.webcamera;
 
 namespace radar.ui.panel
 {
-
-
     #region GAMETIME_VIEW
     public class GameTimeType
     {
@@ -237,6 +232,7 @@ namespace radar.ui.panel
         public RawImage RaycastCameraView;
         public TextMeshProUGUI CameraInfo;
         public Button SwitchInferenceButton;
+        public Button SwitchCameraButton;
         public GameObject InferenceIndicator;
 
         public RawCameraViewType(Transform rootTransform)
@@ -245,14 +241,23 @@ namespace radar.ui.panel
             RaycastCameraView = RawCameraViewRoot.Find("RawCameraView/Background/RaycastCameraView").GetComponent<RawImage>();
             CameraInfo = RawCameraViewRoot.Find("RawCameraView/Background/Info").GetComponent<TextMeshProUGUI>();
             SwitchInferenceButton = RawCameraViewRoot.Find("RawCameraView/Background/SwitchInferenceButton").GetComponent<Button>();
+            SwitchCameraButton = RawCameraViewRoot.Find("RawCameraView/Background/SwitchCameraButton").GetComponent<Button>();
             InferenceIndicator = RawCameraViewRoot.Find("RawCameraView/Background/InferenceIndicator").gameObject;
+
+            UpdateCamera();
+            WebCameraHandler.Instance.OnSelectedCameraChanged += UpdateCamera;
+
+            SwitchCameraButton.onClick.AddListener(() =>
+            {
+                WebCameraHandler.Instance.ChangeSelectedCamera();
+                CameraInfo.text = "当前相机:\n" + WebCameraHandler.Instance.selectedCamera_.root.name;
+            });
 
             SwitchInferenceButton.onClick.AddListener(() =>
                {
-                   Detector detector = GameObject.Find("Detector").GetComponent<Detector>();
-                   detector.SwitchInference();
+                   Detector.Instance.SwitchInference();
 
-                   if (detector.ifInference_)
+                   if (Detector.Instance.ifInference_)
                    {
                        InferenceIndicator.GetComponent<Image>().color = Color.green;
                        InferenceIndicator.transform.Find("Text").GetComponent<TextMeshProUGUI>().text = "识别运行中";
@@ -263,6 +268,14 @@ namespace radar.ui.panel
                        InferenceIndicator.transform.Find("Text").GetComponent<TextMeshProUGUI>().text = "识别已关闭";
                    }
                });
+        }
+
+        public void UpdateCamera()
+        {
+            Debug.Log("UpdateCamera");
+            RaycastCameraView.texture = WebCameraHandler.Instance.selectedCamera_.cameraTexture_;
+            if (WebCameraHandler.Instance.raycastCameras_.Count == 0)
+                CameraInfo.text = "当前为测试视频流";
         }
     };
     #endregion
@@ -349,10 +362,6 @@ namespace radar.ui.panel
                 if (chance > 0)
                     InfoBarView.TerminalBar.SetTerminalContent($"双倍易伤第{chance}次开启 ");
             };
-        }
-        public override void Update()
-        {
-            // UpdateGameTime();
         }
 
         private void UpdateGameTime(StateDatas stateDatas)
