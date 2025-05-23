@@ -1,7 +1,7 @@
 # ARPS-unity 
 > 🕹 本仓库为RoboMaster机器人竞赛相关.
 
-> 🛠 项目正在开发中，功能并不完善
+> 🛠 项目正在开发中，功能并不完善，请先不要使用！！！！！！！
 
 ### 基于Unity的单目雷达站定位方案 （开发中）
 
@@ -17,8 +17,6 @@ Automatic Radar Positioning System based on Unity
 
 <image src="https://github.com/user-attachments/assets/93acbfde-9e41-4c4a-beae-6dc43a1b6c7d" align="center" height="200"/>
 <image src="https://github.com/user-attachments/assets/f7f4631d-283d-46de-9c2b-d43f0f4e53dc" align="center" height="200"/>
-
-即插即用~
 
 借助Unity的跨平台特性，使用任意单目相机和任意系统（Windows、Linux、Android）运行本方案，即可实现雷达站的所有功能。
 

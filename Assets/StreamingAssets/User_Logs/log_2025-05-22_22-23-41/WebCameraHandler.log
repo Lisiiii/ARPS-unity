@@ -1,5 +1,0 @@
----WebCameraHandler Log File Created: 2025-05-22 22:23:45.777 ---
-[2025-05-22 22:23:45.776]<DEBUG> [WebCameraHandler]Camera devices scanned: 2 devices found.
-[2025-05-22 22:23:45.779]<DEBUG> [WebCameraHandler]--- Camera device 0: DECXIN  CAMERA
-[2025-05-22 22:23:45.780]<DEBUG> [WebCameraHandler]--- Camera device 1: OBS Virtual Camera
-[2025-05-22 22:23:46.528]<ERROR> [WebCameraHandler]Failed to open DECXIN  CAMERA.
