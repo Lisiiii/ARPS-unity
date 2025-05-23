@@ -97,7 +97,7 @@ namespace radar.webcamera
                     instance_ = FindAnyObjectByType<WebCameraHandler>();
                     if (instance_ == null)
                     {
-                        GameObject obj = new GameObject("WebCameraHandler");
+                        GameObject obj = new("WebCameraHandler");
                         instance_ = obj.AddComponent<WebCameraHandler>();
                     }
                 }
@@ -122,7 +122,7 @@ namespace radar.webcamera
                 videoPlayer_ = FindFirstObjectByType<VideoPlayer>();
             raycastCameras_ = new List<RaycastCameraType>();
 
-            RenderTexture renderTexture = new RenderTexture(1920, 1080, 1);
+            RenderTexture renderTexture = new(1920, 1080, 1);
             renderTexture.name = "DefaultCamera_RenderTexture";
             renderTexture.Create();
             videoPlayer_.targetTexture = renderTexture;
@@ -236,10 +236,10 @@ namespace radar.webcamera
             if (newWebCamTexture.isPlaying)
             {
                 LogManager.Instance.log($"[WebCameraHandler]{devicename} opened successfully.");
-                RenderTexture renderTexture = new RenderTexture(width, height, 1);
+                RenderTexture renderTexture = new(width, height, 1);
                 renderTexture.name = (devicename + "_RenderTexture").Replace(" ", "_");
                 renderTexture.Create();
-                RaycastCameraType raycastCamera = new RaycastCameraType(cameraAnchor, renderTexture, devicename);
+                RaycastCameraType raycastCamera = new(cameraAnchor, renderTexture, devicename);
                 raycastCamera.webCamTexture_ = newWebCamTexture;
                 raycastCameras_.Add(raycastCamera);
                 selectedCamera_ = raycastCamera;

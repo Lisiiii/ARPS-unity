@@ -26,7 +26,7 @@ namespace radar.data
                     instance_ = FindAnyObjectByType<LogManager>();
                     if (instance_ == null)
                     {
-                        GameObject obj = new GameObject("LogManager");
+                        GameObject obj = new("LogManager");
                         instance_ = obj.AddComponent<LogManager>();
                     }
                 }

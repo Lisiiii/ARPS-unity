@@ -24,7 +24,7 @@ namespace radar.serial
                     instance_ = FindAnyObjectByType<SerialHandler>();
                     if (instance_ == null)
                     {
-                        GameObject obj = new GameObject("SerialHandler");
+                        GameObject obj = new("SerialHandler");
                         instance_ = obj.AddComponent<SerialHandler>();
                     }
                 }

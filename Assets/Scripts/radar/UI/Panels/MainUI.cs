@@ -117,7 +117,7 @@ namespace radar.ui.panel
         }
         public Transform RobotStatusRoot_;
 
-        public Dictionary<RobotType, RobotPrefab> RobotPrefabList_ = new Dictionary<RobotType, RobotPrefab>();
+        public Dictionary<RobotType, RobotPrefab> RobotPrefabList_ = new();
         public class RobotPrefab
         {
             public RobotPrefab(Transform robotPrefabRoot)
@@ -272,7 +272,6 @@ namespace radar.ui.panel
 
         public void UpdateCamera()
         {
-            Debug.Log("UpdateCamera");
             RaycastCameraView.texture = WebCameraHandler.Instance.selectedCamera_.cameraTexture_;
             if (WebCameraHandler.Instance.raycastCameras_.Count == 0)
                 CameraInfo.text = "当前为测试视频流";
@@ -403,7 +402,7 @@ namespace radar.ui.panel
             if (robotList_ == null || robotList_.Count == 0)
             {
                 robotList_ = new();
-                List<RobotType> unInstantiatedRobots = new List<RobotType>(){
+                List<RobotType> unInstantiatedRobots = new(){
                         RobotType.Dart,
                         RobotType.Drone,
                         RobotType.Outpost,
@@ -424,7 +423,7 @@ namespace radar.ui.panel
             }
             foreach (var robotState in stateData.enemyRobots.Data)
             {
-                Vector3 robotPosition = new Vector3(robotState.Value.Position.x, robotState.Value.Position.z + 0.2f, robotState.Value.Position.y);
+                Vector3 robotPosition = new(robotState.Value.Position.x, robotState.Value.Position.z + 0.2f, robotState.Value.Position.y);
                 robotList_[robotState.Key].transform.position = robotPosition;
                 robotList_[robotState.Key].transform.Find("Cylinder").GetComponent<Renderer>().material.color = stateData.gameState.EnemySide == Team.Blue ? Color.blue : Color.red;
             }

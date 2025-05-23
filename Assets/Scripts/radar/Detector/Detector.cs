@@ -34,7 +34,7 @@ namespace radar.detector
                     instance_ = FindAnyObjectByType<Detector>();
                     if (instance_ == null)
                     {
-                        GameObject obj = new GameObject("Detector");
+                        GameObject obj = new("Detector");
                         instance_ = obj.AddComponent<Detector>();
                     }
                 }
@@ -164,15 +164,15 @@ namespace radar.detector
         }
         IEnumerator ArmorDetection(BoundingBox robotBox, Texture2D inputTexture, int idx, bool[] finished)
         {
-            Vector2Int boxOrigin = new Vector2Int((int)robotBox.XMin, (int)robotBox.YMin);
-            Vector2Int boxSize = new Vector2Int((int)(robotBox.XMax - robotBox.XMin), (int)(robotBox.YMax - robotBox.YMin));
+            Vector2Int boxOrigin = new((int)robotBox.XMin, (int)robotBox.YMin);
+            Vector2Int boxSize = new((int)(robotBox.XMax - robotBox.XMin), (int)(robotBox.YMax - robotBox.YMin));
             boxOrigin.x = Mathf.Clamp(boxOrigin.x, 0, inputTexture.width - 1);
             boxOrigin.y = Mathf.Clamp(boxOrigin.y, 0, inputTexture.height - 1);
             boxSize.x = Mathf.Clamp(boxSize.x, 0, inputTexture.width - boxOrigin.x - 1);
             boxSize.y = Mathf.Clamp(boxSize.y, 0, inputTexture.height - boxOrigin.y - 1);
 
             Color[] m_Colors = inputTexture.GetPixels(boxOrigin.x, boxOrigin.y, boxSize.x, boxSize.y);
-            Texture2D clipedTexture = new Texture2D(boxSize.x, boxSize.y, TextureFormat.RGB24, false);
+            Texture2D clipedTexture = new(boxSize.x, boxSize.y, TextureFormat.RGB24, false);
             clipedTexture.SetPixels(m_Colors);
             clipedTexture.Apply();
 
@@ -183,7 +183,7 @@ namespace radar.detector
                 return armorResults != null;
             });
 
-            Vector2 robotType = new Vector2(-1, 0);
+            Vector2 robotType = new(-1, 0);
             if (armorResults.Count != 0)
                 foreach (var kvp in armorResults)
                     foreach (var box in kvp.Value)
@@ -204,7 +204,7 @@ namespace radar.detector
                 else
                     inferenceResults_.Add((int)robotType.x, new List<BoundingBox>()
             {
-                new BoundingBox()
+                new()
                 {
                     XMin = robotBox.XMin,
                     YMin = robotBox.YMin,
@@ -215,6 +215,8 @@ namespace radar.detector
             });
             }
             finished[idx] = true;
+
+            Destroy(clipedTexture);
         }
 
         private void RayCast(Dictionary<int, List<BoundingBox>> inferenceResults, Camera raycastCamera)
@@ -240,7 +242,7 @@ namespace radar.detector
                     RaycastHit hit;
                     if (Physics.Raycast(ray, out hit))
                     {
-                        Vector3 robotCoordinate = new Vector3(hit.point.x, hit.point.z, hit.point.y);
+                        Vector3 robotCoordinate = new(hit.point.x, hit.point.z, hit.point.y);
                         RobotType robotType = (RobotType)(classIndex > 5 ? classIndex - 6 : classIndex);
                         RobotCoordinatePair newPair = new(robotCoordinate, robotType);
                         if (classIndex >= classScale.x && classIndex <= classScale.y)

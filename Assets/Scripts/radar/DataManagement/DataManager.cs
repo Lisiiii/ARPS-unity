@@ -23,7 +23,7 @@ namespace radar.data
                     instance_ = FindAnyObjectByType<DataManager>();
                     if (instance_ == null)
                     {
-                        GameObject obj = new GameObject("DataManager");
+                        GameObject obj = new("DataManager");
                         instance_ = obj.AddComponent<DataManager>();
                     }
                 }
@@ -32,7 +32,7 @@ namespace radar.data
         }
         private static DataManager instance_;
 
-        public ConcurrentQueue<StateDatas> updatedStateQueue = new ConcurrentQueue<StateDatas>();
+        public ConcurrentQueue<StateDatas> updatedStateQueue = new();
         public event Action<StateDatas> OnDataUpdated;
         public event Action<int> OnDoubleDebuffChancesEnabled;
         private StateDatas stateData_ = new();
@@ -119,7 +119,7 @@ namespace radar.data
             }
             doubleDebuffActivedTimes++;
 
-            RobotInteraction_Radar robotInteractionData = new RobotInteraction_Radar
+            RobotInteraction_Radar robotInteractionData = new()
             {
                 dataCmdId = 0x0121,
                 senderId = (ushort)(Instance.stateData.gameState.EnemySide == Team.Blue ? 9 : 109),
@@ -157,7 +157,7 @@ namespace radar.data
                 realLocationRobots.Add(robot.Key, robotCoordinate);
             }
 
-            MapRobotData mapDataToSend = new MapRobotData
+            MapRobotData mapDataToSend = new()
             {
                 HeroPositionX = (ushort)realLocationRobots[RobotType.Hero].x,
                 HeroPositionY = (ushort)realLocationRobots[RobotType.Hero].y,

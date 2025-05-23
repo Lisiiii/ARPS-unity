@@ -9,7 +9,7 @@ namespace radar.data
     public enum RobotType { Unkown = -1, Hero = 0, Engineer = 1, Infantry3 = 2, Infantry4 = 3, Infantry5 = 4, Sentry = 5, Dart = 6, Drone = 7, Outpost = 8, Base = 9 }
     public static class RobotName
     {
-        public static readonly Dictionary<RobotType, string> Chinese = new Dictionary<RobotType, string>
+        public static readonly Dictionary<RobotType, string> Chinese = new()
         {
             { RobotType.Hero, "英雄" },
             { RobotType.Engineer, "工程" },
@@ -25,7 +25,7 @@ namespace radar.data
 
         };
 
-        public static readonly Dictionary<RobotType, string> English = new Dictionary<RobotType, string>
+        public static readonly Dictionary<RobotType, string> English = new()
         {
             { RobotType.Hero, "Hero" },
             { RobotType.Engineer, "Engineer" },
@@ -45,7 +45,7 @@ namespace radar.data
 
     public static class StageName
     {
-        public static readonly Dictionary<GameStage, string> Chinese = new Dictionary<GameStage, string>
+        public static readonly Dictionary<GameStage, string> Chinese = new()
         {
             { GameStage.NotStarted, "未开始" },
             { GameStage.Preparing, "准备中" },

@@ -19,7 +19,7 @@ namespace radar.Yolov8
         private Unity.InferenceEngine.Tensor<float> inputTensor_ = null;
         private int outputTensorSize_ = 8400; // The size of the output tensor
         private int classCount_; // Number of classes in model
-        private Vector2Int inputSize_ = new Vector2Int(640, 640); // Input size of the model
+        private Vector2Int inputSize_ = new(640, 640); // Input size of the model
         private Texture2D inputTexture_;
         public Yolov8Inferencer(Unity.InferenceEngine.ModelAsset inferenceModel, int classCount = 1, Vector2Int inputSize = default)
         {
@@ -68,8 +68,8 @@ namespace radar.Yolov8
         Dictionary<int, List<BoundingBox>> postProcess(float[] cpuTensorArray, int classCount, float confidenceThreshold, float nmsThreshold)
         {
             // cpuTensor[i,j,k] (which is [1, classCount + 4 ,8400]) = cpuTensorArray[i * (classCount + 4) * 8400 + j * 8400 + k]
-            Dictionary<int, List<BoundingBox>> finalResults = new Dictionary<int, List<BoundingBox>>();
-            Dictionary<int, List<BoundingBox>> classBoundingBoxes = new Dictionary<int, List<BoundingBox>>();
+            Dictionary<int, List<BoundingBox>> finalResults = new();
+            Dictionary<int, List<BoundingBox>> classBoundingBoxes = new();
 
             for (int i = 0; i < outputTensorSize_; i++)
             {

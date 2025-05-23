@@ -6,7 +6,7 @@ namespace radar.ui
 {
     public class UIManager : MonoBehaviour
     {
-        public static Dictionary<string, Panel> _panels = new Dictionary<string, Panel>();
+        public static Dictionary<string, Panel> _panels = new();
 
         public void Awake()
         {
@@ -32,7 +32,7 @@ namespace radar.ui
         {
             foreach (var panel in _panels)
             {
-                panel.Value.Update();
+                panel.Value.Refresh();
             }
         }
         public static T GetPanel<T>() where T : Panel

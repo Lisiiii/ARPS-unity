@@ -33,7 +33,7 @@ namespace radar.utils
 
         public static List<BoundingBox> NonMaxSuppression(List<BoundingBox> boxes, float threshold)
         {
-            List<BoundingBox> pickedBoxes = new List<BoundingBox>();
+            List<BoundingBox> pickedBoxes = new();
 
             // 根据置信度对边界框进行排序
             boxes = boxes.OrderByDescending(box => box.Confidence).ToList();
@@ -46,7 +46,7 @@ namespace radar.utils
                 boxes.RemoveAt(0);
 
                 // 删除与所选框重叠面积大于阈值的其他框
-                List<BoundingBox> overlappingBoxes = new List<BoundingBox>();
+                List<BoundingBox> overlappingBoxes = new();
                 foreach (BoundingBox box in boxes)
                 {
                     if (IntersectionOverUnion(topBox, box) > threshold)
